@@ -61,17 +61,13 @@ export const articles: Article[] = [
 ];
 
 export const heroNavLeft = [
-  { label: "Highlights", href: "#" },
-  { label: "Browse", href: "#" },
-  { label: "Collections", href: "#" },
-  { label: "Archive", href: "#" },
+  { label: "About", href: "/about" },
+  { label: "Collections", href: "/collections" },
 ];
 
 export const heroNavRight = [
-  { label: "About", href: "/about" },
   { label: "Editorial Board", href: "#" },
-  { label: "Submit", href: "#" },
-  { label: "Login", href: "#" },
+  { label: "Join", href: "#" },
 ];
 
 export const footerColumns = [
