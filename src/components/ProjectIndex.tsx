@@ -2,11 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { Project, ProjectEffect } from "@/lib/content";
-import Threads from "@/components/backgrounds/Threads";
-import LetterGlitch from "@/components/backgrounds/LetterGlitch";
-import Particles from "@/components/backgrounds/Particles";
-import RippleGrid from "@/components/backgrounds/RippleGrid";
+import type { Project } from "@/lib/content";
 
 // A24's featured-titles treatment, ported. Two behaviours carry it:
 //
@@ -52,82 +48,6 @@ const TONES: Record<
     meta: ["rgba(0,0,0,0.28)", "rgba(0,0,0,0.6)"],
   },
 };
-
-// How long the backdrop takes to cross-fade, and how long a torn-down effect
-// stays mounted so it can fade OUT rather than vanish on mouse-leave.
-const BACKDROP_MS = 500;
-
-// Each effect is picked to describe its project rather than just decorate it,
-// and every one is forced monochrome to sit inside the black-and-white system.
-// Only the hovered row's effect is ever mounted — four live WebGL contexts
-// animating behind a static list is not a trade worth making.
-function Backdrop({ effect, tone }: { effect: ProjectEffect; tone: Tone }) {
-  const ink = tone === "dark" ? "#ffffff" : "#000000";
-
-  switch (effect) {
-    // Drifting signal traces — EEG channels, and the artifacts riding on them.
-    case "threads":
-      return (
-        <Threads
-          color={tone === "dark" ? [1, 1, 1] : [0, 0, 0]}
-          amplitude={1.6}
-          distance={0.3}
-          enableMouseInteraction={false}
-        />
-      );
-
-    // Characters corrupting in place: a prompt being injected, caught mid-flip.
-    case "glitch":
-      return (
-        <LetterGlitch
-          glitchColors={
-            tone === "dark"
-              ? ["#2a2a2a", "#7a7a7a", "#f2f2f2"]
-              : ["#d8d8d8", "#8a8a8a", "#0d0d0d"]
-          }
-          glitchSpeed={44}
-          centerVignette={false}
-          outerVignette
-          smooth
-          backgroundColor="transparent"
-          characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]<>/\\|=+-_*&^%$#@!?:;0123456789"
-        />
-      );
-
-    // One mote per agent, drifting in loose formation.
-    case "particles":
-      return (
-        <Particles
-          particleColors={[ink, ink]}
-          particleCount={320}
-          particleSpread={11}
-          speed={0.08}
-          particleBaseSize={64}
-          alphaParticles
-          disableRotation={false}
-          moveParticlesOnHover={false}
-        />
-      );
-
-    // An occupancy grid rippling outward — the world model being probed.
-    case "ripple":
-      return (
-        <RippleGrid
-          gridColor={ink}
-          lightMode={tone === "light"}
-          gridSize={11}
-          gridThickness={13}
-          rippleIntensity={0.06}
-          fadeDistance={1.7}
-          vignetteStrength={2.2}
-          glowIntensity={0.12}
-          opacity={1}
-          mouseInteraction
-          mouseInteractionRadius={1.1}
-        />
-      );
-  }
-}
 
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -270,7 +190,7 @@ export default function ProjectIndex({
                         {project.name}
                       </span>
 
-                      <span className="flex max-w-[42ch] flex-col gap-[0.55em] text-[12px] uppercase leading-[1.5] tracking-[0.1em] sm:mt-[0.75em]">
+                      <span className="flex max-w-[42ch] flex-col gap-[0.55em] text-[12px] uppercase leading-[1.5] tracking-[0.1em] sm:-mt-[0.25em]">
                         <span
                           style={{
                             color: palette.summary[dimmed ? 1 : 0],

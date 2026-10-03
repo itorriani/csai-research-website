@@ -111,15 +111,11 @@ export const coreValues = [
 
 // Project index on the homepage. Summaries for CANARY and SS are technical
 // PLACEHOLDERS pending real abstracts.
-/** Which animated backdrop fades up behind a row on hover. */
-export type ProjectEffect = "threads" | "glitch" | "particles" | "ripple";
-
 export type Project = {
   id: string;
   name: string;
   summary: string;
   pi: string;
-  effect: ProjectEffect;
 };
 
 export const projects: Project[] = [
@@ -129,8 +125,6 @@ export const projects: Project[] = [
     summary:
       "Artifact detection and clean-data retention in Muse 2 EEG",
     pi: "Zach Goldwyn",
-    // Drifting signal traces, reading as EEG channels.
-    effect: "threads",
   },
   {
     id: "canary",
@@ -138,16 +132,12 @@ export const projects: Project[] = [
     summary:
       "Adversarial prompt-injection detection across LLM tool-use pipelines",
     pi: "Marek Seablom-Michel",
-    // Characters corrupting in place — a prompt under injection.
-    effect: "glitch",
   },
   {
     id: "ss",
     name: "SOCIAL SIMULATION",
     summary: "Agentic orchestration and long-horizon tool-use evaluation",
     pi: "Namish Mannepalli",
-    // A drifting swarm, one mote per agent.
-    effect: "particles",
   },
 ];
 
@@ -158,7 +148,5 @@ export const previousProjects: Project[] = [
     name: "ADUA",
     summary: "Out of distribution autonomous navigation",
     pi: "Ivan Torriani",
-    // An occupancy grid rippling out from the pointer.
-    effect: "ripple",
   },
 ];
