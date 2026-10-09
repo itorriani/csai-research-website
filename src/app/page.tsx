@@ -1,4 +1,3 @@
-import HeroVideo from "@/components/HeroVideo";
 import HeroNav from "@/components/HeroNav";
 import SiteFooter from "@/components/SiteFooter";
 import ProjectIndex from "@/components/ProjectIndex";
@@ -7,11 +6,13 @@ import { projects, previousProjects } from "@/lib/content";
 export default function Home() {
   return (
     <>
-      <HeroVideo>
-        <HeroNav />
+      {/* The first screenful is white and empty but for the nav — the research
+          index below it keeps the tones it always had. */}
+      <header className="flex min-h-screen flex-col bg-white">
+        <HeroNav tone="light" />
 
         {/* Scroll cue */}
-        <div className="mt-auto flex flex-col items-center pb-12 text-white">
+        <div className="mt-auto flex flex-col items-center pb-12 text-ink/40">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -24,7 +25,7 @@ export default function Home() {
             <path d="m6 9 6 6 6-6" />
           </svg>
         </div>
-      </HeroVideo>
+      </header>
 
       <ProjectIndex
         id="projects"

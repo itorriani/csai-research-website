@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
 import HeroNav from "@/components/HeroNav";
 import FadeContent from "@/components/FadeContent";
@@ -20,21 +19,9 @@ export default function AboutPage() {
           Inter is scoped here rather than applied site-wide. */}
       <article className="mx-auto w-full max-w-[680px] px-6 pb-24 pt-20 font-inter">
         <FadeContent delay={100}>
-          <Link href="/" className="inline-block">
-            <Image
-              src="/csai-logo.png"
-              alt="CSAI Research"
-              width={1254}
-              height={1254}
-              priority
-              className="h-10 w-10 object-contain invert"
-            />
-          </Link>
-
-          <header className="mt-2 space-y-1 text-[13px] leading-snug text-white">
-            <p>2026–2027</p>
-            <p>About</p>
-          </header>
+          <h1 className="font-wordmark text-[clamp(3rem,9vw,6.5rem)] uppercase leading-[0.95] tracking-[-0.03em] text-white">
+            About
+          </h1>
         </FadeContent>
 
         <FadeContent delay={250}>
@@ -49,32 +36,40 @@ export default function AboutPage() {
           </p>
         </FadeContent>
 
-        <ol className="mt-10 space-y-10">
+        <ul className="mt-10 space-y-10">
           {coreValues.map((value, i) => (
             <FadeContent
               key={value.term}
               as="li"
               delay={550 + i * 150}
-              className="grid grid-cols-[2.25rem_1fr] items-start gap-x-5"
+              className="group grid grid-cols-[1.25rem_1fr] items-start gap-x-4"
             >
-              <span
+              {/* Double-chevron marker stands in for the old 01/02/03 numerals. */}
+              <svg
                 aria-hidden="true"
-                className="pt-[2px] text-[13px] font-semibold tabular-nums text-white/35"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mt-[6px] h-3 w-3 text-white/35 transition-colors duration-300 group-hover:text-white"
               >
-                {String(i + 1).padStart(2, "0")}
-              </span>
+                <path d="M5 5l7 7-7 7" />
+                <path d="M12 5l7 7-7 7" />
+              </svg>
 
               <div>
                 <h2 className="mb-2 text-[15px] font-bold tracking-tight text-white">
                   {value.term}
                 </h2>
-                <p className="text-[15px] leading-[1.8] text-white/80">
+                <p className="text-[15px] leading-[1.8] text-white">
                   {value.body}
                 </p>
               </div>
             </FadeContent>
           ))}
-        </ol>
+        </ul>
 
         <FadeContent delay={200}>
           <div className="mt-20 flex flex-col items-end gap-4">

@@ -17,6 +17,9 @@
   --font-wordmark: var(--font-wordmark-face), "Helvetica Neue", Arial, sans-serif;
   --font-ysl: var(--font-ysl-face), "Helvetica Neue", Arial, sans-serif;
   --font-inter: var(--font-inter-face), "Helvetica Neue", Arial, sans-serif;
+
+  /* Naval is reserved for the CSAI Research lockup — nothing else. */
+  --font-naval: var(--font-naval-face), "Times New Roman", Georgia, serif;
 }
 
 body {

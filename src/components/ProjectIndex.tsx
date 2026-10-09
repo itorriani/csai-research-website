@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Project } from "@/lib/content";
 
@@ -155,10 +156,13 @@ export default function ProjectIndex({
         <ul>
           {projects.map((project, i) => {
             const dimmed = active === project.id;
+            // Rows without a page yet stay as inert anchors rather than
+            // routing nowhere through Link.
+            const Row = project.href ? Link : "a";
             return (
               <li key={project.id}>
-                <a
-                  href="#"
+                <Row
+                  href={project.href ?? "#"}
                   className="block focus-visible:outline-none"
                   onMouseEnter={() => setActive(project.id)}
                   onFocus={() => setActive(project.id)}
@@ -215,7 +219,7 @@ export default function ProjectIndex({
                       </span>
                     </span>
                   </span>
-                </a>
+                </Row>
               </li>
             );
           })}

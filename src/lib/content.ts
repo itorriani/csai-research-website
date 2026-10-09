@@ -112,6 +112,8 @@ export type Project = {
   name: string;
   summary: string;
   pi: string;
+  /** Project page, where one exists; rows without it stay inert. */
+  href?: string;
 };
 
 export const projects: Project[] = [
@@ -121,6 +123,7 @@ export const projects: Project[] = [
     summary:
       "Artifact detection and clean-data retention in Muse 2 EEG",
     pi: "Zach Goldwyn",
+    href: "/projects/mind-the-noise",
   },
   {
     id: "canary",
@@ -144,5 +147,78 @@ export const previousProjects: Project[] = [
     name: "ADUA",
     summary: "Out of distribution autonomous navigation",
     pi: "Ivan Torriani",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// MIND THE NOISE — project page
+// ---------------------------------------------------------------------------
+
+export const mindTheNoiseGap =
+  "Current EEG cleaning methods can often get rid of important information, leading to lower quality data. Experiments within the dataset confirm that > 50% of good data is thrown away, with percentages often exceeding 70 or 80 percent. This confirms the quality of EEG data collection.";
+
+export type Paper = {
+  /** Served from /public/papers; the .png beside it is the page-one render. */
+  slug: string;
+  title: string;
+  authors: string;
+  venue: string;
+  /** Natural size of the page-one render, for next/image. */
+  width: number;
+  height: number;
+};
+
+export const mindTheNoisePapers: Paper[] = [
+  {
+    slug: "muse-automated-data-cleaning",
+    title: "Automated Data Cleaning for the Muse EEG",
+    authors: "Arnaud Delorme",
+    venue: "IEEE BIBM, 2021",
+    width: 935,
+    height: 1210,
+  },
+  {
+    slug: "wearable-eeg-signal-quality",
+    title:
+      "Comparison of a Pragmatic and Regression Approach for Wearable EEG Signal Quality Assessment",
+    authors: "Witteveen, Pradhapan, Mihajlović",
+    venue: "IEEE J. Biomed. Health Inform., 2020",
+    width: 908,
+    height: 1210,
+  },
+  {
+    slug: "artifact-detection-systematic-review",
+    title:
+      "A Systematic Review of Techniques for Artifact Detection and Artifact Category Identification in Electroencephalography from Wearable Devices",
+    authors: "Arpaia, De Luca, Di Marino, et al.",
+    venue: "Systematic Review",
+    width: 910,
+    height: 1287,
+  },
+];
+
+// Reading notes on the three papers above, in the order they should be read.
+// The third is a PLACEHOLDER pending Zach's notes on the systematic review.
+export const mindTheNoiseNotes = [
+  "In general, the paper is saying that it’s possible for the MUSE headset to filter noise events and gather artifacts. This is a foundational assumption for the entire research project, as the Muse 2 will be the only device used for collecting and cleaning EEG data. It’s also important to mention that Muse 2 is one of the cheapest options for EEG collection, and that a paper proving its usefulness is vital for the project to be taken seriously.",
+  "To be considered before paper 1. It points out that current wearable headsets have very noisy data compared to clinical EEG data collection methods, and that wearable headset methods are largely undeveloped. Some of the reasons they mention are uncontrolled environments, where people are on the move, etc…",
+  "PLACEHOLDER. Reading notes on the systematic review go here — what the review covers, which artifact-detection families it surveys, and where its taxonomy lines up with the two papers above. Replace this paragraph with the real summary.",
+];
+
+export const mindTheNoisePivots = [
+  {
+    label: "Pivot 3",
+    body: "Neuroscience is a field behind because they can’t use AI. Achieving more accuracy could be beneficial.",
+    grade: "Fair",
+  },
+  {
+    label: "Pivot 1",
+    body: "MUSE headset is cheaper to use, healthcare could be aided, research accessibility.",
+    grade: "Fair",
+  },
+  {
+    label: "Pivot 2",
+    body: "Neurological issues might be too far fetched. ADHD or other stuff can be associated with alpha waves, it could address some stuff.",
+    grade: "Fair",
   },
 ];

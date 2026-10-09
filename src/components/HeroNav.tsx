@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import CsaiLockup from "@/components/CsaiLockup";
 import { heroNavLeft, heroNavRight } from "@/lib/content";
 
 function SearchIcon() {
@@ -19,65 +19,67 @@ function SearchIcon() {
   );
 }
 
-export default function HeroNav() {
+const LINK =
+  "text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60";
+
+// `tone` only flips the ink: "dark" is the nav over the black pages, "light"
+// is the nav on a white band. The light nav additionally carries the hover
+// treatment — a faint grey pane washes across the whole bar. The ink stays
+// dark: at this tint there is nowhere near enough contrast to carry white
+// type, so inverting the links would make them unreadable.
+export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const light = tone === "light";
   return (
-    <nav className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 px-8 pt-6 text-white">
-      <ul className="flex flex-wrap items-center gap-x-7 gap-y-2">
-        {heroNavLeft.map((item) => (
-          <li key={item.label}>
-            <a
-              href={item.href}
-              className="text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60"
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <Link
-        href="/"
-        className="relative top-1.5 flex items-center justify-center gap-2.5"
-      >
-        <Image
-          src="/csai-logo.png"
-          alt=""
-          width={1254}
-          height={1254}
-          priority
-          className="relative -top-1 h-8 w-8 object-contain invert"
+    <div className="group relative">
+      {light && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-[0.08]"
         />
-        <span className="flex items-baseline leading-none">
-          <span className="font-wordmark text-[27px] leading-none tracking-tight">
-            CSAI
-          </span>
-          <span className="font-ysl text-[29px] leading-none tracking-tight">
-            RESEARCH
-          </span>
-        </span>
-      </Link>
+      )}
 
-      <ul className="flex flex-wrap items-center justify-end gap-x-7 gap-y-2">
-        {heroNavRight.map((item) => (
-          <li key={item.label}>
+      <nav
+        className={`relative grid grid-cols-[1fr_auto_1fr] items-center gap-6 px-8 pb-5 pt-3 transition-colors duration-300 ${
+          light ? "text-ink" : "text-white"
+        }`}
+      >
+        <ul className="flex flex-wrap items-center gap-x-7 gap-y-2">
+          {heroNavLeft.map((item) => (
+            <li key={item.label}>
+              <a href={item.href} className={LINK}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <Link
+          href="/"
+          className="flex items-center justify-center"
+          aria-label="CSAI Research, California"
+        >
+          <CsaiLockup marks={3} className="text-[20px]" />
+        </Link>
+
+        <ul className="flex flex-wrap items-center justify-end gap-x-7 gap-y-2">
+          {heroNavRight.map((item) => (
+            <li key={item.label}>
+              <a href={item.href} className={LINK}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
             <a
-              href={item.href}
-              className="text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60"
+              href="#"
+              aria-label="Search"
+              className="block transition-opacity hover:opacity-60"
             >
-              {item.label}
+              <SearchIcon />
             </a>
           </li>
-        ))}
-        <li>
-          <a
-            href="#"
-            aria-label="Search"
-            className="block transition-opacity hover:opacity-60"
-          >
-            <SearchIcon />
-          </a>
-        </li>
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </div>
   );
 }

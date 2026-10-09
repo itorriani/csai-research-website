@@ -23,6 +23,16 @@ const ysl = localFont({
   display: "swap",
 });
 
+// OPTI Naval, the house face for the CSAI Research lockup.
+const naval = localFont({
+  src: [
+    { path: "./fonts/OPTINaval.otf", weight: "400", style: "normal" },
+    { path: "./fonts/OPTINaval-Black.otf", weight: "900", style: "normal" },
+  ],
+  variable: "--font-naval-face",
+  display: "swap",
+});
+
 // Inter, scoped to the About document rather than applied site-wide.
 const inter = localFont({
   src: "./fonts/InterVariable.woff2",
@@ -40,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${openSans.variable} ${wordmark.variable} ${ysl.variable} ${inter.variable} h-full antialiased`}
+      className={`${openSans.variable} ${wordmark.variable} ${ysl.variable} ${naval.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
