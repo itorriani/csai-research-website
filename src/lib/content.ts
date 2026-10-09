@@ -112,6 +112,10 @@ export type Project = {
   name: string;
   summary: string;
   pi: string;
+  /** Shown only on the postcards, where the caption runs as a paragraph. */
+  lab?: string;
+  location?: string;
+  term?: string;
   /** Project page, where one exists; rows without it stay inert. */
   href?: string;
 };
@@ -123,6 +127,9 @@ export const projects: Project[] = [
     summary:
       "Artifact detection and clean-data retention in Muse 2 EEG",
     pi: "Zach Goldwyn",
+    lab: "Neural Signals Group",
+    location: "Cal Poly, San Luis Obispo, California",
+    term: "2026–2027",
     href: "/projects/mind-the-noise",
   },
   {
@@ -131,12 +138,18 @@ export const projects: Project[] = [
     summary:
       "Adversarial prompt-injection detection across LLM tool-use pipelines",
     pi: "Marek Seablom-Michel",
+    lab: "Model Safety Group",
+    location: "Cal Poly, San Luis Obispo, California",
+    term: "2026–2027",
   },
   {
     id: "ss",
     name: "SOCIAL SIMULATION",
     summary: "Agentic orchestration and long-horizon tool-use evaluation",
     pi: "Namish Mannepalli",
+    lab: "Multi-Agent Systems Group",
+    location: "Cal Poly, San Luis Obispo, California",
+    term: "2026–2027",
   },
 ];
 
@@ -147,6 +160,9 @@ export const previousProjects: Project[] = [
     name: "ADUA",
     summary: "Out of distribution autonomous navigation",
     pi: "Ivan Torriani",
+    lab: "Autonomy Group",
+    location: "Cal Poly, San Luis Obispo, California",
+    term: "2025–2026",
   },
 ];
 

@@ -3,15 +3,15 @@ import { footerColumns } from "@/lib/content";
 
 export default function SiteFooter() {
   return (
-    <footer className="bg-black">
+    <footer className="bg-white">
       <div className="mx-auto w-full max-w-[1200px] px-5 py-12">
         <div className="grid gap-10 md:grid-cols-3">
           {footerColumns.map((col) => (
             <div key={col.heading}>
-              <h3 className="mb-3 text-[15px] font-bold text-white">
+              <h3 className="mb-3 text-[15px] font-bold text-black">
                 {col.heading}
               </h3>
-              <ul className="space-y-2 text-[15px] text-white/70">
+              <ul className="space-y-2 text-[15px] text-black/70">
                 {col.links.map((link) => (
                   <li key={link}>
                     <a href="#" className="hover:underline">
@@ -31,7 +31,7 @@ export default function SiteFooter() {
           alt=""
           width={1254}
           height={1254}
-          className="h-9 w-9 object-contain invert"
+          className="h-9 w-9 object-contain"
         />
       </div>
     </footer>

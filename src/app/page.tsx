@@ -1,6 +1,6 @@
 import HeroNav from "@/components/HeroNav";
 import SiteFooter from "@/components/SiteFooter";
-import ProjectIndex from "@/components/ProjectIndex";
+import ProjectPostcards from "@/components/ProjectPostcards";
 import { projects, previousProjects } from "@/lib/content";
 
 export default function Home() {
@@ -27,17 +27,18 @@ export default function Home() {
         </div>
       </header>
 
-      <ProjectIndex
+      <ProjectPostcards
         id="projects"
         heading={<>2026&ndash;2027 Research</>}
         projects={projects}
       />
 
-      <ProjectIndex
+      <ProjectPostcards
         id="previous-projects"
         heading="Previous Research"
         projects={previousProjects}
-        tone="light"
+        tightTop
+        rule
       />
 
       <SiteFooter />

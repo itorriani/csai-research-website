@@ -9,11 +9,18 @@ export default function CsaiLockup({
   markSize = 1.9,
   track = 0.015,
   initialScale = 1.18,
+  locale = "93407 California",
+  /** 900 pulls in the Naval Black cut; 400 is the regular. */
+  localeWeight = 900,
   localeSize = 0.42,
   localeTrack = 0.06,
   className = "",
 }: {
   variant?: BrainVariant;
+  /** Place line beneath the wordmark. */
+  locale?: string;
+  /** Weight of the locale line. 900 is the Naval Black cut. */
+  localeWeight?: number;
   /** How many marks sit above the rule. */
   marks?: 1 | 3;
   /** Height of each mark, in em. */
@@ -83,15 +90,21 @@ export default function CsaiLockup({
       </span>
 
       <span
-        className="uppercase leading-none"
+        className="font-wordmark uppercase leading-none"
         style={{
           fontSize: `${localeSize}em`,
+          fontWeight: localeWeight,
+          fontStyle: "normal",
           letterSpacing: `${localeTrack}em`,
           marginRight: `-${localeTrack}em`,
-          marginTop: "0.3em",
+          marginTop: "0.46em",
         }}
       >
-        California
+        {/* Naval ships oldstyle figures only, so numerals sit at x-height.
+            Left at their natural size: scaling a digit up to cap height also
+            scales its stroke, which makes it read as bold against the caps
+            beside it. */}
+        {locale}
       </span>
     </div>
   );

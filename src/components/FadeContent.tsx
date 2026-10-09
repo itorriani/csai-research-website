@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ElementType } from "react";
+import usePrefersReducedMotion from "@/lib/usePrefersReducedMotion";
 
 // Port of React Bits' FadeContent: an IntersectionObserver fires a CSS
 // opacity/blur transition the first time the element scrolls into view.
@@ -30,11 +31,7 @@ export default function FadeContent({
 }: FadeContentProps) {
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
