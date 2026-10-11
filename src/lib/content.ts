@@ -141,6 +141,7 @@ export const projects: Project[] = [
     lab: "Model Safety Group",
     location: "Cal Poly, San Luis Obispo, California",
     term: "2026–2027",
+    href: "/projects/canary",
   },
   {
     id: "ss",
@@ -236,5 +237,197 @@ export const mindTheNoisePivots = [
     label: "Pivot 2",
     body: "Neurological issues might be too far fetched. ADHD or other stuff can be associated with alpha waves, it could address some stuff.",
     grade: "Fair",
+  },
+];
+
+// Mind the Noise, the project document. Three movements: the gap, what the
+// project does about it, and where the method could go next.
+export const mindTheNoiseSections: {
+  /** Kept as an authoring key only — the page renders no section headings. */
+  label: string;
+  body: string;
+  points?: string[];
+}[] = [
+  {
+    label: "Hook",
+    body: ".00001% of the human brain has been mapped in full detail, according to Harvard and Google scientists Viren Jain and Jeff Lichtman. For reference, the ocean is considered one of the most mysterious and unexplored domains in the world, and has 27% mapped. With this lack of information, we can’t understand some of the most fundamental human operations like consciousness, memory, attention, decision making, emotion, and learning.",
+  },
+  {
+    label: "Solution",
+    body: "One of the key solutions to this problem is collecting massive amounts of electroencephalography (EEG) data, which record the brain’s electrical activity through electrodes on the scalp. However, collecting clean EEG readings is incredibly difficult, often only having < 30% clean data per reading, which is why so little of the brain is understood. Mind the Noise sets out to develop novel methods to collect and clean EEG data with the Muse 2 headset.",
+  },
+  {
+    label: "Future Opportunities",
+    body: "The methods developed in this research has the potential to:",
+    points: [
+      "Bridge AI and neuroscience sectors like cognitive neuroscience, clinical neurophysiology, and more, by finally providing models with clean, quality data that can be used in training sets.",
+      "Accelerate research across neuroscience, medicine, and psychology by uniquely leveraging one of the most affordable EEG reading technologies, the Muse 2 headset.",
+      "Inspire one of the first at-home solutions to diagnosing neurological issues which can currently only be addressed through hospital grade hardware and methods.",
+    ],
+  },
+];
+
+// Zach's team, per the 2026-27 team selection sheet.
+export const mindTheNoiseTeam = [
+  "Benjamin DeMayo",
+  "Samuel Fakhouri",
+  "Rushil Ghosh",
+  "Namit Jain",
+  "Shrinithi Shaurya",
+];
+
+// Sources for the claims in the Mind the Noise document, in the order the
+// evidence appears. The three papers also run as plates in the body.
+export const mindTheNoiseCitations: {
+  authors: string;
+  title: string;
+  where: string;
+  url?: string;
+}[] = [
+  {
+    authors: "Shapson-Coe, A., Januszewski, M., Berger, D. R., et al.",
+    title:
+      "A petavoxel fragment of human cerebral cortex reconstructed at nanoscale resolution",
+    where: "Science 384, eadk4858 (2024)",
+    url: "https://doi.org/10.1126/science.adk4858",
+  },
+  {
+    authors: "The Nippon Foundation–GEBCO Seabed 2030 Project",
+    title:
+      "Seabed 2030 announces millions of square kilometres of new seafloor data on World Hydrography Day",
+    where: "21 June 2025 — 27.3% of the ocean floor mapped to modern standards",
+    url: "https://seabed2030.org/2025/06/21/seabed-2030-announces-millions-of-square-kilometers-of-new-seafloor-data-on-world-hydrography-day/",
+  },
+  {
+    authors: "Delorme, A.",
+    title: "Automated Data Cleaning for the Muse EEG",
+    where: "IEEE BIBM, 2021",
+    url: "/papers/muse-automated-data-cleaning.pdf",
+  },
+  {
+    authors: "Witteveen, J., Pradhapan, P., Mihajlović, V.",
+    title:
+      "Comparison of a Pragmatic and Regression Approach for Wearable EEG Signal Quality Assessment",
+    where: "IEEE J. Biomed. Health Inform., 2020",
+    url: "/papers/wearable-eeg-signal-quality.pdf",
+  },
+  {
+    authors: "Arpaia, P., De Luca, A., Di Marino, L., et al.",
+    title:
+      "A Systematic Review of Techniques for Artifact Detection and Artifact Category Identification in Electroencephalography from Wearable Devices",
+    where: "Sensors (MDPI), systematic review",
+    url: "/papers/artifact-detection-systematic-review.pdf",
+  },
+];
+
+// ---------------------------------------------------------------- CANARY
+
+// Marek's team, per the 2026-27 team selection sheet.
+export const canaryTeam = [
+  "Chace Lai",
+  "Dhruv Jadhav",
+  "Miles Schulist",
+  "Samson Chang",
+  "Johan Jijo",
+];
+
+export const canarySections: {
+  /** Kept as an authoring key only — the page renders no section headings. */
+  label: string;
+  body: string;
+  points?: string[];
+}[] = [
+  {
+    label: "Hook",
+    body: "Prompt injection involves an attacker who hides instructions in content an AI receives, which can make the agent do malicious activity; it’s rated as the #1 risk on OWASP for AI applications, and according to NeurIPS, all 22 frontier models like Claude, ChatGPT, and Gemini have been successfully exploited. With the rapid 700% increase of agentic AI in software development, if prompt injection can’t be properly addressed, corporations can be exploited, critical infrastructure can be penetrated, and technological development will slow down.",
+  },
+  {
+    label: "Solution",
+    body: "Addressing prompt injection can be divided into two paths: gaining awareness of possible attacks and creating software to help systems defend against attacks that have already been made. CANARY sets out to create measurement tools to help companies test their systems against prompt injection, bring light to unique attacks, and defend against them.",
+  },
+  {
+    label: "Future Opportunities",
+    body: "The methods developed in this research can:",
+    points: [
+      "Protect the next generation of AI-assisted software development in large industries and startups by creating new protection against prompt injection attacks.",
+      "Provide vital infrastructure to industries by advancing measurement strategies to more accurately benchmark models.",
+      "Prepare the growing amount of agents embedded into people’s emails, phonebooks, and lives by discovering new prompt injection attacks that could take place.",
+    ],
+  },
+];
+
+export const canaryPapers: Paper[] = [
+  {
+    slug: "indirect-prompt-injection-realworld",
+    title:
+      "Not What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
+    authors: "Greshake, Abdelnabi, Mishra, et al.",
+    venue: "ACM AISec, 2023",
+    width: 935,
+    height: 1210,
+  },
+  {
+    slug: "formalizing-benchmarking-prompt-injection",
+    title: "Formalizing and Benchmarking Prompt Injection Attacks and Defenses",
+    authors: "Liu, Jia, Geng, Jia, Gong",
+    venue: "USENIX Security, 2024",
+    width: 935,
+    height: 1210,
+  },
+  {
+    slug: "agentdojo-prompt-injection-benchmark",
+    title:
+      "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
+    authors: "Debenedetti, Zhang, Balunović, et al.",
+    venue: "NeurIPS Datasets & Benchmarks, 2024",
+    width: 935,
+    height: 1210,
+  },
+];
+
+// Sources for the claims above, in the order the evidence appears. The two
+// marked UNVERIFIED are Marek's figures — searching did not turn up a source
+// matching them, so they need his reference before this page goes public.
+export const canaryCitations: {
+  authors: string;
+  title: string;
+  where: string;
+  url?: string;
+}[] = [
+  {
+    authors: "OWASP GenAI Security Project",
+    title: "LLM01:2025 Prompt Injection",
+    where: "OWASP Top 10 for LLM Applications, 2025 — ranked first",
+    url: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+  },
+  {
+    authors: "UNVERIFIED",
+    title: "NeurIPS — all 22 frontier models successfully exploited",
+    where: "Source needed; no matching paper found",
+  },
+  {
+    authors: "UNVERIFIED",
+    title: "700% increase in agentic AI in software development",
+    where: "Source needed; no matching report found",
+  },
+  {
+    authors: "Greshake, K., Abdelnabi, S., Mishra, S., et al.",
+    title:
+      "Not What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
+    where: "ACM Workshop on Artificial Intelligence and Security, 2023",
+    url: "/papers/indirect-prompt-injection-realworld.pdf",
+  },
+  {
+    authors: "Liu, Y., Jia, Y., Geng, R., Jia, J., Gong, N. Z.",
+    title: "Formalizing and Benchmarking Prompt Injection Attacks and Defenses",
+    where: "33rd USENIX Security Symposium, 2024",
+    url: "/papers/formalizing-benchmarking-prompt-injection.pdf",
+  },
+  {
+    authors: "Debenedetti, E., Zhang, J., Balunović, M., et al.",
+    title:
+      "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
+    where: "NeurIPS Datasets and Benchmarks Track, 2024",
+    url: "/papers/agentdojo-prompt-injection-benchmark.pdf",
   },
 ];

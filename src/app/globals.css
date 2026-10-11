@@ -17,6 +17,7 @@
   --font-wordmark: var(--font-wordmark-face), "Helvetica Neue", Arial, sans-serif;
   --font-ysl: var(--font-ysl-face), "Helvetica Neue", Arial, sans-serif;
   --font-inter: var(--font-inter-face), "Helvetica Neue", Arial, sans-serif;
+  --font-venetian: var(--font-venetian-face), "Times New Roman", Georgia, serif;
 
   /* Naval is reserved for the CSAI Research lockup — nothing else. */
   --font-naval: var(--font-naval-face), "Times New Roman", Georgia, serif;
@@ -26,4 +27,67 @@ body {
   background: var(--color-page);
   color: var(--color-body);
   font-family: var(--font-sans);
+}
+
+/* Hanging rules in place of bullets, for the project documents. Each bar
+   draws down as its item scrolls into view, on a scroll-driven timeline so
+   no JS is involved. The hidden start state is scoped to @supports: where
+   the timeline is unavailable the bar is simply there at full height,
+   rather than stuck at zero. */
+.rule-list > li {
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+.rule-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.32em;
+  bottom: 0.18em;
+  width: 1px;
+  background: currentColor;
+  opacity: 0.28;
+  transform-origin: top;
+  transition:
+    opacity 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Weights toward the item under the cursor without moving any text. */
+.rule-list > li:hover::before {
+  opacity: 0.8;
+  width: 2px;
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .rule-list > li::before {
+    animation: rule-draw linear both;
+    animation-timeline: view();
+    animation-range: entry 15% entry 75%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rule-list > li::before {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* HK Venetian ships a single Regular cut, so the document reaches the ink
+   density of the printed reference with a hairline stroke rather than a
+   synthetic bold, which would smear the serifs. Scoped to running prose —
+   at caption sizes the same stroke closes up the counters. */
+.doc-ink {
+  -webkit-text-stroke: 0.3px currentColor;
 }

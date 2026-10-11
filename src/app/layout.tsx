@@ -33,6 +33,13 @@ const naval = localFont({
   display: "swap",
 });
 
+// HK Venetian, the reading face for the project documents.
+const venetian = localFont({
+  src: "./fonts/HKVenetian-Regular.otf",
+  variable: "--font-venetian-face",
+  display: "swap",
+});
+
 // Inter, scoped to the About document rather than applied site-wide.
 const inter = localFont({
   src: "./fonts/InterVariable.woff2",
@@ -50,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${openSans.variable} ${wordmark.variable} ${ysl.variable} ${naval.variable} ${inter.variable} h-full antialiased`}
+      className={`${openSans.variable} ${wordmark.variable} ${ysl.variable} ${naval.variable} ${venetian.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
