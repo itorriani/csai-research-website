@@ -276,47 +276,39 @@ export const mindTheNoiseTeam = [
   "Shrinithi Shaurya",
 ];
 
-// Sources for the claims in the Mind the Noise document, in the order the
-// evidence appears. The three papers also run as plates in the body.
-export const mindTheNoiseCitations: {
-  authors: string;
-  title: string;
-  where: string;
-  url?: string;
-}[] = [
+// MLA 9 works-cited entries. `locator` is the DOI or URL printed at the end
+// of the entry, per MLA; `href` is what it points at.
+export type Citation = {
+  mla: string;
+  locator?: string;
+  href?: string;
+};
+
+// Mind the Noise, alphabetised by author as MLA requires.
+export const mindTheNoiseCitations: Citation[] = [
   {
-    authors: "Shapson-Coe, A., Januszewski, M., Berger, D. R., et al.",
-    title:
-      "A petavoxel fragment of human cerebral cortex reconstructed at nanoscale resolution",
-    where: "Science 384, eadk4858 (2024)",
-    url: "https://doi.org/10.1126/science.adk4858",
+    mla: "Arpaia, Pasquale, et al. \u201CA Systematic Review of Techniques for Artifact Detection and Artifact Category Identification in Electroencephalography from Wearable Devices.\u201D Sensors, vol. 25, no. 18, 2025, article 5770.",
+    locator: "doi.org/10.3390/s25185770",
+    href: "/papers/artifact-detection-systematic-review.pdf",
   },
   {
-    authors: "The Nippon Foundation–GEBCO Seabed 2030 Project",
-    title:
-      "Seabed 2030 announces millions of square kilometres of new seafloor data on World Hydrography Day",
-    where: "21 June 2025 — 27.3% of the ocean floor mapped to modern standards",
-    url: "https://seabed2030.org/2025/06/21/seabed-2030-announces-millions-of-square-kilometers-of-new-seafloor-data-on-world-hydrography-day/",
+    mla: "Delorme, Arnaud. \u201CAutomated Data Cleaning for the Muse EEG.\u201D 2021 IEEE International Conference on Bioinformatics and Biomedicine (BIBM), IEEE, 2021.",
+    locator: "doi.org/10.1109/BIBM52615.2021.9669415",
+    href: "/papers/muse-automated-data-cleaning.pdf",
   },
   {
-    authors: "Delorme, A.",
-    title: "Automated Data Cleaning for the Muse EEG",
-    where: "IEEE BIBM, 2021",
-    url: "/papers/muse-automated-data-cleaning.pdf",
+    mla: "Nippon Foundation\u2013GEBCO Seabed 2030 Project. \u201CSeabed 2030 Announces Millions of Square Kilometres of New Seafloor Data on World Hydrography Day.\u201D Seabed 2030, 21 June 2025.",
+    locator: "seabed2030.org",
+    href: "https://seabed2030.org/2025/06/21/seabed-2030-announces-millions-of-square-kilometers-of-new-seafloor-data-on-world-hydrography-day/",
   },
   {
-    authors: "Witteveen, J., Pradhapan, P., Mihajlović, V.",
-    title:
-      "Comparison of a Pragmatic and Regression Approach for Wearable EEG Signal Quality Assessment",
-    where: "IEEE J. Biomed. Health Inform., 2020",
-    url: "/papers/wearable-eeg-signal-quality.pdf",
+    mla: "Shapson-Coe, Alexander, et al. \u201CA Petavoxel Fragment of Human Cerebral Cortex Reconstructed at Nanoscale Resolution.\u201D Science, vol. 384, no. 6696, 2024.",
+    locator: "doi.org/10.1126/science.adk4858",
+    href: "https://doi.org/10.1126/science.adk4858",
   },
   {
-    authors: "Arpaia, P., De Luca, A., Di Marino, L., et al.",
-    title:
-      "A Systematic Review of Techniques for Artifact Detection and Artifact Category Identification in Electroencephalography from Wearable Devices",
-    where: "Sensors (MDPI), systematic review",
-    url: "/papers/artifact-detection-systematic-review.pdf",
+    mla: "Witteveen, Jolanda, et al. \u201CComparison of a Pragmatic and Regression Approach for Wearable EEG Signal Quality Assessment.\u201D IEEE Journal of Biomedical and Health Informatics, vol. 24, no. 3, 2020.",
+    href: "/papers/wearable-eeg-signal-quality.pdf",
   },
 ];
 
@@ -339,7 +331,7 @@ export const canarySections: {
 }[] = [
   {
     label: "Hook",
-    body: "Prompt injection involves an attacker who hides instructions in content an AI receives, which can make the agent do malicious activity; it’s rated as the #1 risk on OWASP for AI applications, and according to NeurIPS, all 22 frontier models like Claude, ChatGPT, and Gemini have been successfully exploited. With the rapid 700% increase of agentic AI in software development, if prompt injection can’t be properly addressed, corporations can be exploited, critical infrastructure can be penetrated, and technological development will slow down.",
+    body: "Prompt injection involves an attacker who hides instructions in content an AI receives, which can make the agent do malicious activity; it’s rated as the #1 risk on OWASP for AI applications, and in a large-scale public red-teaming competition every one of the 13 frontier models tested \u2014 Claude, ChatGPT, and Gemini among them \u2014 was successfully exploited. With Gartner projecting a 700% rise in enterprise applications carrying task-specific AI agents, if prompt injection can’t be properly addressed, corporations can be exploited, critical infrastructure can be penetrated, and technological development will slow down.",
   },
   {
     label: "Solution",
@@ -385,49 +377,33 @@ export const canaryPapers: Paper[] = [
   },
 ];
 
-// Sources for the claims above, in the order the evidence appears. The two
-// marked UNVERIFIED are Marek's figures — searching did not turn up a source
-// matching them, so they need his reference before this page goes public.
-export const canaryCitations: {
-  authors: string;
-  title: string;
-  where: string;
-  url?: string;
-}[] = [
+// Canary, alphabetised by author as MLA requires.
+export const canaryCitations: Citation[] = [
   {
-    authors: "OWASP GenAI Security Project",
-    title: "LLM01:2025 Prompt Injection",
-    where: "OWASP Top 10 for LLM Applications, 2025 — ranked first",
-    url: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+    mla: "Debenedetti, Edoardo, et al. \u201CAgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents.\u201D Advances in Neural Information Processing Systems 37, Datasets and Benchmarks Track, 2024.",
+    href: "/papers/agentdojo-prompt-injection-benchmark.pdf",
   },
   {
-    authors: "UNVERIFIED",
-    title: "NeurIPS — all 22 frontier models successfully exploited",
-    where: "Source needed; no matching paper found",
+    mla: "Dziemian, Mateusz, et al. \u201CHow Vulnerable Are AI Agents to Indirect Prompt Injections? Insights from a Large-Scale Public Competition.\u201D arXiv, 2026.",
+    locator: "arxiv.org/abs/2603.15714",
+    href: "https://arxiv.org/abs/2603.15714",
   },
   {
-    authors: "UNVERIFIED",
-    title: "700% increase in agentic AI in software development",
-    where: "Source needed; no matching report found",
+    mla: "Gartner, Inc. \u201CGartner Predicts 40% of Enterprise Apps Will Feature Task-Specific AI Agents by 2026, Up from Less Than 5% in 2025.\u201D Gartner Newsroom, 26 Aug. 2025.",
+    locator: "gartner.com",
+    href: "https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025",
   },
   {
-    authors: "Greshake, K., Abdelnabi, S., Mishra, S., et al.",
-    title:
-      "Not What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
-    where: "ACM Workshop on Artificial Intelligence and Security, 2023",
-    url: "/papers/indirect-prompt-injection-realworld.pdf",
+    mla: "Greshake, Kai, et al. \u201CNot What You\u2019ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection.\u201D Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security, Association for Computing Machinery, 2023.",
+    href: "/papers/indirect-prompt-injection-realworld.pdf",
   },
   {
-    authors: "Liu, Y., Jia, Y., Geng, R., Jia, J., Gong, N. Z.",
-    title: "Formalizing and Benchmarking Prompt Injection Attacks and Defenses",
-    where: "33rd USENIX Security Symposium, 2024",
-    url: "/papers/formalizing-benchmarking-prompt-injection.pdf",
+    mla: "Liu, Yupei, et al. \u201CFormalizing and Benchmarking Prompt Injection Attacks and Defenses.\u201D Proceedings of the 33rd USENIX Security Symposium, USENIX Association, 2024.",
+    href: "/papers/formalizing-benchmarking-prompt-injection.pdf",
   },
   {
-    authors: "Debenedetti, E., Zhang, J., Balunović, M., et al.",
-    title:
-      "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
-    where: "NeurIPS Datasets and Benchmarks Track, 2024",
-    url: "/papers/agentdojo-prompt-injection-benchmark.pdf",
+    mla: "OWASP GenAI Security Project. \u201CLLM01:2025 Prompt Injection.\u201D OWASP Top 10 for Large Language Model Applications, 2025.",
+    locator: "genai.owasp.org",
+    href: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
   },
 ];

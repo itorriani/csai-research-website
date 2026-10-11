@@ -111,35 +111,48 @@ export default function MindTheNoisePage() {
               the body, and link to the PDFs already on the site. */}
           <section className="mt-20 border-t border-black pt-10">
             <h2 className="antialiased font-sans text-[10px] uppercase tracking-[0.18em] text-black/55">
-              Sources
+              Works Cited
             </h2>
 
-            <ol className="mt-6 space-y-4">
-              {mindTheNoiseCitations.map((c, i) => (
+            {/* MLA 9: alphabetised by author, hanging indent, locator last. */}
+            <ul className="mt-6 space-y-4">
+              {mindTheNoiseCitations.map((c) => (
                 <li
-                  key={c.title}
-                  className="antialiased grid grid-cols-[1.75rem_1fr] text-[14px] leading-[1.5] text-black/75"
+                  key={c.mla}
+                  className="antialiased pl-8 -indent-8 text-[14px] leading-[1.55] text-black/75"
                 >
-                  <span className="tabular-nums text-black/45">{i + 1}.</span>
-                  <span>
-                    {c.authors}{" "}
-                    {c.url ? (
+                  {c.mla}
+                  {c.locator && c.href && (
+                    <>
+                      {" "}
                       <a
-                        href={c.url}
+                        href={c.href}
                         target="_blank"
                         rel="noopener"
                         className="text-black underline decoration-black/25 underline-offset-[3px] transition-colors duration-300 hover:decoration-black"
                       >
-                        {c.title}
+                        {c.locator}
                       </a>
-                    ) : (
-                      <span className="text-black">{c.title}</span>
-                    )}
-                    . {c.where}.
-                  </span>
+                      .
+                    </>
+                  )}
+                  {!c.locator && c.href && (
+                    <>
+                      {" "}
+                      <a
+                        href={c.href}
+                        target="_blank"
+                        rel="noopener"
+                        className="text-black underline decoration-black/25 underline-offset-[3px] transition-colors duration-300 hover:decoration-black"
+                      >
+                        PDF
+                      </a>
+                      .
+                    </>
+                  )}
                 </li>
               ))}
-            </ol>
+            </ul>
           </section>
         </article>
       </main>
