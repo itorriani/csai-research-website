@@ -46,6 +46,11 @@ function CardFace({ project }: { project: Project }) {
 const CARD_CLASS =
   "flex aspect-[8.5/11] w-full flex-col bg-white p-7 text-black shadow-[0_18px_45px_-20px_rgba(0,0,0,0.9)]";
 
+// The read-more strip under the detail title. The left pad cancels the
+// trailing letter-space so the tracked caps sit optically centred.
+const STRIP_CLASS =
+  "font-sans mt-7 flex h-12 w-full items-center justify-center bg-white pl-[0.18em] text-center text-[12px] font-bold uppercase tracking-[0.18em] text-black transition-colors duration-300 hover:bg-white/80";
+
 export default function ProjectPostcards({
   id,
   heading,
@@ -241,18 +246,27 @@ export default function ProjectPostcards({
             >
               {selectedProject && (
                 <>
-                  {/* The technical title carries the panel; the project's
-                      short name stays on the card itself. */}
-                  <h3 className="font-ysl text-[clamp(1.6rem,3vw,2.6rem)] uppercase leading-[1.1] tracking-[0.01em]">
-                    {selectedProject.summary}
+                  {/* The technical title carries the panel, set upright to
+                      match the strip below; the short name trails it in the
+                      italic face, dimmed so it reads as a signature. */}
+                  <h3 className="text-[clamp(1.6rem,3vw,2.6rem)] font-bold uppercase leading-[1.1] tracking-[0.01em]">
+                    {selectedProject.summary}{" "}
+                    <span className="font-ysl font-normal text-white/40">
+                      {selectedProject.name}
+                    </span>
                   </h3>
 
-                  <p className="mt-5 max-w-[52ch] text-[14px] leading-[1.7] text-white/70">
-                    Placeholder abstract — this is where the standfirst for the
-                    project would sit, two or three sentences describing the
-                    question, the method, and what the group expects to
-                    publish.
-                  </p>
+                  {/* A plain white strip stands in for the abstract: the
+                      one way on from the open stack into the project page. */}
+                  {selectedProject.href ? (
+                    <Link href={selectedProject.href} className={STRIP_CLASS}>
+                      Read more
+                    </Link>
+                  ) : (
+                    <div className={STRIP_CLASS} aria-hidden="true">
+                      Read more
+                    </div>
+                  )}
 
                 </>
               )}

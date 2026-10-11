@@ -1,6 +1,7 @@
 import HeroNav from "@/components/HeroNav";
 import SiteFooter from "@/components/SiteFooter";
 import ProjectPostcards from "@/components/ProjectPostcards";
+import ResearchBackdrop from "@/components/ResearchBackdrop";
 import { projects, previousProjects } from "@/lib/content";
 
 export default function Home() {
@@ -27,19 +28,27 @@ export default function Home() {
         </div>
       </header>
 
-      <ProjectPostcards
-        id="projects"
-        heading={<>2026&ndash;2027 Research</>}
-        projects={projects}
-      />
+      {/* Current and previous research share one surface: the field is
+          painted once here so the gradient runs through both panels instead
+          of stopping at the seam between them. The extra top padding is
+          headroom for the hero fade, so the first heading lands past it. */}
+      <div className="relative isolate overflow-hidden bg-[#050509] pt-24 sm:pt-32">
+        <ResearchBackdrop />
 
-      <ProjectPostcards
-        id="previous-projects"
-        heading="Previous Research"
-        projects={previousProjects}
-        tightTop
-        rule
-      />
+        <ProjectPostcards
+          id="projects"
+          heading={<>2026&ndash;2027 Research</>}
+          projects={projects}
+        />
+
+        <ProjectPostcards
+          id="previous-projects"
+          heading="Previous Research"
+          projects={previousProjects}
+          tightTop
+          rule
+        />
+      </div>
 
       <SiteFooter />
     </>
