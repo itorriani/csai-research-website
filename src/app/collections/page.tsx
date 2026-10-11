@@ -1,9 +1,8 @@
-import Image from "next/image";
+import Link from "next/link";
+import BrainMark from "@/components/BrainMark";
 import type { Metadata } from "next";
-import HeroNav from "@/components/HeroNav";
-import SiteFooter from "@/components/SiteFooter";
-import FadeContent from "@/components/FadeContent";
-import { projects, previousProjects } from "@/lib/content";
+import DocumentPage from "@/components/DocumentPage";
+import { projects, previousProjects, type Project } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Collections | CSAI Research",
@@ -11,105 +10,95 @@ export const metadata: Metadata = {
     "Every CSAI Research paper, shown as its cover sheet: MIND THE NOISE, CANARY, SOCIAL SIMULATION and ADUA.",
 };
 
-// The cover sheet from template.pdf, rebuilt rather than rasterised so it stays
-// crisp at any tile size. Everything inside is measured in `cqw` against the
-// sheet itself, so the whole composition scales with the grid instead of
-// needing a breakpoint per column count.
-//
-// One liberty: the type runs a little larger than a true 1:1 reduction of the
-// letter page, where "CSAI Research" would land near 5px in a tile this wide
-// and read as a smudge.
-function CoverSheet() {
+// The cover sheet from template.pdf, rebuilt rather than rasterised so it
+// stays crisp at any tile size. Everything inside is measured in `cqw`
+// against the sheet itself, so the composition scales with the grid instead
+// of needing a breakpoint per column count. On a white page the sheet needs
+// a hairline border, or it has no edge.
+function CoverSheet({ term }: { term: string }) {
   return (
-    <div className="@container relative aspect-[8.5/11] w-full overflow-hidden bg-white">
-      <div className="absolute left-[13%] top-[10%] font-inter">
-        <Image
-          src="/csai-logo.png"
-          alt=""
-          width={1254}
-          height={1254}
-          className="h-[10cqw] w-[10cqw] object-contain"
-        />
-        <p className="mt-[3.2cqw] text-[5.2cqw] font-bold leading-none tracking-[-0.01em] text-black">
+    <div className="@container relative aspect-[8.5/11] w-full overflow-hidden border border-black/15 bg-white">
+      <div className="absolute left-[13%] top-[10%]">
+        <BrainMark className="h-[7cqw] w-auto" />
+        <p className="mt-[3.2cqw] text-[5.2cqw] leading-none tracking-[-0.01em] text-black">
           CSAI Research
         </p>
-        <p className="mt-[2.4cqw] text-[3.5cqw] leading-none text-black/75">
-          2026&ndash;2027
+        <p className="mt-[2.4cqw] text-[3.5cqw] leading-none text-black/70">
+          {term}
         </p>
       </div>
     </div>
   );
 }
 
-// The live marker: the mark itself, pulsing. Decorative on its own — the key
-// below the heading names it, and each title carries an sr-only label.
+// The live marker: the mark itself, pulsing. Decorative — each title it sits
+// beside carries an sr-only label.
 function LiveMark() {
   return (
-    <Image
-      src="/csai-logo.png"
-      alt=""
-      width={1254}
-      height={1254}
-      className="h-[11px] w-[11px] shrink-0 animate-pulse object-contain invert motion-reduce:animate-none"
-    />
+    <BrainMark className="h-[11px] w-auto shrink-0 animate-pulse motion-reduce:animate-none" />
   );
 }
 
-export default function CollectionsPage() {
-  // Current work first, then concluded — the same order the homepage reads in.
-  // Only the 2026–2027 set is still running, so only it gets the live marker.
-  const papers = [
-    ...projects.map((p) => ({ ...p, inProgress: true })),
-    ...previousProjects.map((p) => ({ ...p, inProgress: false })),
-  ];
-
+function Shelf({
+  term,
+  papers,
+  inProgress,
+}: {
+  term: string;
+  papers: Project[];
+  inProgress: boolean;
+}) {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <HeroNav />
+    <section className="mt-14">
+      {/* Set at body weight — same Venetian, same ink and stroke as the
+          running text on the project documents. */}
+      <h2 className="doc-ink text-[17px] leading-[1.45]">{term}</h2>
 
-      <div className="mx-auto w-full max-w-[1200px] px-5 pb-28 pt-20">
-        <FadeContent delay={80}>
-          <h1 className="font-wordmark text-[clamp(3rem,9vw,6.5rem)] uppercase leading-[0.95] tracking-[-0.03em] text-white">
-            Collections
-          </h1>
-
-          {/* Key for the marker riding beside the in-progress titles below. */}
-          <p className="mb-16 mt-5 flex items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-white/35">
-            <LiveMark />
-            In-progress research
-          </p>
-        </FadeContent>
-
-        <ul className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-          {papers.map((paper, i) => (
-            <FadeContent as="li" key={paper.id} delay={220 + i * 130}>
-              <a href="#" className="group block focus-visible:outline-none">
-                <div className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5">
-                  <CoverSheet />
+      <ul className="mt-6 grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3">
+        {papers.map((paper) => {
+          const Tile = paper.href ? Link : "div";
+          return (
+            <li key={paper.id}>
+              <Tile
+                href={paper.href ?? "#"}
+                className={`block ${paper.href ? "group" : ""}`}
+              >
+                <div className="transition-opacity duration-500 group-hover:opacity-80">
+                  <CoverSheet term={paper.term ?? term} />
                 </div>
 
-                <h2 className="mt-5 flex items-center gap-2 font-wordmark text-[22px] leading-[1.1] tracking-[-0.02em] text-white transition-colors duration-300 group-hover:text-white/55">
+                {/* The name carries the weight; everything under it steps
+                    back, the same split the documents use. */}
+                <h3 className="doc-ink mt-4 flex items-center gap-2 text-[19px] leading-[1.2]">
                   {paper.name}
-                  {paper.inProgress && (
+                  {inProgress && (
                     <>
                       <LiveMark />
                       <span className="sr-only">In progress</span>
                     </>
                   )}
-                </h2>
-                <p className="mt-2 text-[12px] uppercase italic leading-[1.5] tracking-[0.03em] text-white/45">
-                  &ldquo;{paper.summary}&rdquo;
+                </h3>
+
+                <p className="mt-2 text-[14px] leading-[1.45] text-black/65 antialiased">
+                  {paper.summary}
                 </p>
-                <p className="mt-2.5 text-[11px] uppercase tracking-[0.1em] text-white/35">
+                <p className="mt-2 font-sans text-[10px] uppercase tracking-[0.12em] text-black/45 antialiased">
                   {paper.pi}
                 </p>
-              </a>
-            </FadeContent>
-          ))}
-        </ul>
-      </div>
+              </Tile>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
 
-      <SiteFooter />
-    </main>
+export default function CollectionsPage() {
+  return (
+    <DocumentPage title="Collections">
+      <Shelf term="2026–2027" papers={projects} inProgress />
+      <Shelf term="2025–2026" papers={previousProjects} inProgress={false} />
+    </DocumentPage>
   );
 }

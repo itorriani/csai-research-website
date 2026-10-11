@@ -1,7 +1,5 @@
-import Image from "next/image";
 import type { Metadata } from "next";
-import HeroNav from "@/components/HeroNav";
-import FadeContent from "@/components/FadeContent";
+import DocumentPage from "@/components/DocumentPage";
 import { aboutIntro, aboutLead, coreValues } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -12,86 +10,35 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen flex-1 bg-black text-white">
-      <HeroNav />
+    <DocumentPage
+      title="About"
+      meta={<>CSAI Research &middot; Cal Poly, San Luis Obispo, California</>}
+    >
+      <p className="doc-ink mt-12 text-[17px] leading-[1.45]">{aboutIntro}</p>
+      <p className="doc-ink mt-7 text-[17px] leading-[1.45]">{aboutLead}</p>
 
-      {/* Document column mirrors the PDF: ~1.5in side margins on a letter page.
-          Inter is scoped here rather than applied site-wide. */}
-      <article className="mx-auto w-full max-w-[680px] px-6 pb-24 pt-20 font-inter">
-        <FadeContent delay={100}>
-          <h1 className="font-wordmark text-[clamp(3rem,9vw,6.5rem)] uppercase leading-[0.95] tracking-[-0.03em] text-white">
-            About
-          </h1>
-        </FadeContent>
+      {/* The values take the same hanging hairline rules as the lists in the
+          project documents, so the two read as one family. */}
+      <ul className="rule-list mt-12 space-y-7">
+        {coreValues.map((value) => (
+          <li key={value.term} className="doc-ink text-[17px] leading-[1.45]">
+            <span className="font-sans text-[11px] uppercase tracking-[0.16em] text-black/45 antialiased">
+              {value.term}
+            </span>
+            <span className="mt-2 block">{value.body}</span>
+          </li>
+        ))}
+      </ul>
 
-        <FadeContent delay={250}>
-          <p className="mt-10 text-[15px] leading-[1.8] text-white/80">
-            {aboutIntro}
-          </p>
-        </FadeContent>
-
-        <FadeContent delay={400}>
-          <p className="mt-10 text-[15px] leading-[1.8] text-white/80">
-            {aboutLead}
-          </p>
-        </FadeContent>
-
-        <ul className="mt-10 space-y-10">
-          {coreValues.map((value, i) => (
-            <FadeContent
-              key={value.term}
-              as="li"
-              delay={550 + i * 150}
-              className="group grid grid-cols-[1.25rem_1fr] items-start gap-x-4"
-            >
-              {/* Double-chevron marker stands in for the old 01/02/03 numerals. */}
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="mt-[6px] h-3 w-3 text-white/35 transition-colors duration-300 group-hover:text-white"
-              >
-                <path d="M5 5l7 7-7 7" />
-                <path d="M12 5l7 7-7 7" />
-              </svg>
-
-              <div>
-                <h2 className="mb-2 text-[15px] font-bold tracking-tight text-white">
-                  {value.term}
-                </h2>
-                <p className="text-[15px] leading-[1.8] text-white">
-                  {value.body}
-                </p>
-              </div>
-            </FadeContent>
-          ))}
-        </ul>
-
-        <FadeContent delay={200}>
-          <div className="mt-20 flex flex-col items-end gap-4">
-            <Image
-              src="/csai-logo.png"
-              alt=""
-              width={1254}
-              height={1254}
-              className="h-6 w-6 object-contain opacity-40 invert"
-            />
-
-            <div className="text-right text-[13px] leading-relaxed">
-              <p className="text-white">
-                Ivan Torriani, Trace Macias, Marek Seablom-Michel
-              </p>
-              <p className="text-white/45">
-                Director and Associate Directors of Research
-              </p>
-            </div>
-          </div>
-        </FadeContent>
-      </article>
-    </main>
+      {/* Signed off, as the sheet would be. */}
+      <div className="mt-20 border-t border-black pt-8 text-right">
+        <p className="antialiased text-[14px] leading-[1.55] text-black">
+          Ivan Torriani, Trace Macias, Marek Seablom-Michel
+        </p>
+        <p className="antialiased text-[14px] leading-[1.55] text-black/55">
+          Director and Associate Directors of Research
+        </p>
+      </div>
+    </DocumentPage>
   );
 }
