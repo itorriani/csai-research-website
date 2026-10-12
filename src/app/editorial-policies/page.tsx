@@ -11,10 +11,7 @@ export const metadata: Metadata = {
 
 export default function EditorialPoliciesPage() {
   return (
-    <DocumentPage
-      title="Editorial Policies"
-      meta={<>CSAI Research Division &middot; NeurIPS and IEEE standards</>}
-    >
+    <DocumentPage title="Editorial Policies">
       {editorialPolicy.map((para, i) => (
         <p
           key={para.slice(0, 32)}

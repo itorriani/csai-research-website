@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import BrainMark from "@/components/BrainMark";
 import type { PolicyDoc } from "@/lib/content";
 import usePrefersReducedMotion from "@/lib/usePrefersReducedMotion";
@@ -20,10 +21,23 @@ function Sheet({ doc }: { doc: PolicyDoc }) {
   return (
     <div className="@container relative aspect-[8.5/11] w-full overflow-hidden border border-black/15 bg-white">
       <div className="absolute left-[13%] top-[10%]">
-        {/* House mark at the head of the sheet, as on the Collections
-            covers — these are CSAI documents about someone else's standard,
-            not reproductions of it. */}
-        <BrainMark className="h-[7cqw] w-auto" />
+        {/* House mark first, the issuing body's mark beside it, divided by
+            a hairline — a CSAI sheet about someone else's standard. */}
+        <div className="flex items-center gap-[3cqw]">
+          <BrainMark className="h-[7cqw] w-auto shrink-0" />
+          <span className="h-[6cqw] w-px shrink-0 bg-black/20" />
+          <Image
+            src={doc.logo}
+            alt=""
+            width={320}
+            height={94}
+            className={`${doc.logoHeight} w-auto shrink-0`}
+            // Small inline marks, and the sheets can be stacked out of the
+            // observer's reach — load them rather than waiting on lazy.
+            loading="eager"
+            unoptimized
+          />
+        </div>
 
         <p className="mt-[3.2cqw] text-[7cqw] leading-none tracking-[-0.01em] text-black">
           {doc.wordmark}

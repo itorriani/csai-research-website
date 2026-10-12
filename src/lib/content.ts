@@ -636,6 +636,9 @@ export const editorialPolicy = [
 ];
 
 export type PolicyDoc = {
+  /** The issuing body's own mark, shown beside the house mark. */
+  logo: string;
+  logoHeight: string;
   /** Set on the sheet itself, as a wordmark. */
   wordmark: string;
   /** The single word under it: CHECKLIST, STRUCTURE. */
@@ -647,6 +650,8 @@ export type PolicyDoc = {
 
 export const editorialPolicyDocs: PolicyDoc[] = [
   {
+    logo: "/neurips-logo.svg",
+    logoHeight: "h-[6cqw]",
     wordmark: "NeurIPS",
     label: "Checklist",
     title: "NeurIPS Paper Checklist Guidelines",
@@ -655,6 +660,8 @@ export const editorialPolicyDocs: PolicyDoc[] = [
     href: "https://neurips.cc/public/guides/PaperChecklist",
   },
   {
+    logo: "/ieee-logo.svg",
+    logoHeight: "h-[3.4cqw]",
     wordmark: "IEEE",
     label: "Structure",
     title: "Structure Your Paper \u2014 IEEE Author Center",
