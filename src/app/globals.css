@@ -91,3 +91,20 @@ body {
 .doc-ink {
   -webkit-text-stroke: 0.3px currentColor;
 }
+
+/* Justified setting. The documents are printed sheets, so prose squares off
+   on both edges rather than ragging right. Hyphenation is not optional
+   here: justified Venetian at this measure opens rivers without it, and the
+   narrower the column the worse it gets. `lang` on <html> is what lets the
+   browser hyphenate at all. */
+.doc-justify {
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* Last lines of a justified block stay flush left — stretching them is the
+   one thing that makes justified text look broken rather than set. */
+.doc-justify {
+  text-align-last: auto;
+}

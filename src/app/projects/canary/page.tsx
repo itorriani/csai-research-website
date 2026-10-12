@@ -1,7 +1,7 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import BrainMark from "@/components/BrainMark";
 import HeroNav from "@/components/HeroNav";
+import PaperPlates from "@/components/PaperPlates";
 import SiteFooter from "@/components/SiteFooter";
 import {
   canaryCitations,
@@ -55,54 +55,23 @@ export default function CanaryPage() {
 
           {canarySections.map((section, i) => (
             <section key={section.label} className="mt-12">
-              <p className="doc-ink text-[17px] leading-[1.45]">{section.body}</p>
+              <p className="doc-ink doc-justify text-[17px] leading-[1.45]">{section.body}</p>
 
               {section.points && (
                 // Hanging hairline rules rather than bullet glyphs — see
                 // .rule-list in globals.css for the draw-in.
                 <ul className="rule-list mt-7 space-y-6">
                   {section.points.map((point) => (
-                    <li key={point} className="doc-ink text-[17px] leading-[1.45]">
+                    <li key={point} className="doc-ink doc-justify text-[17px] leading-[1.45]">
                       {point}
                     </li>
                   ))}
                 </ul>
               )}
 
-              {/* The three papers the gap rests on, dropped to greyscale so
-                  the plate sits inside the document rather than on top of
-                  it. Sits between the opening and what the project does. */}
-              {i === 0 && (
-                <ul className="mt-12 grid grid-cols-3 gap-5">
-                  {canaryPapers.map((paper) => (
-                    <li key={paper.slug}>
-                      <a
-                        href={`/papers/${paper.slug}.pdf`}
-                        target="_blank"
-                        rel="noopener"
-                        className="group block focus-visible:outline-none"
-                      >
-                        {/* Crop to one sheet so three different page
-                            geometries still line up across the row. */}
-                        <div className="relative aspect-[8.5/11] w-full overflow-hidden border border-black/15 bg-white">
-                          <Image
-                            src={`/papers/${paper.slug}.png`}
-                            alt={`First page of “${paper.title}”`}
-                            width={paper.width}
-                            height={paper.height}
-                            sizes="(min-width: 640px) 33vw, 100vw"
-                            className="h-full w-full object-cover object-top grayscale transition-opacity duration-500 group-hover:opacity-80"
-                          />
-                        </div>
-
-                        <p className="antialiased mt-3 font-sans text-[10px] uppercase leading-[1.5] tracking-[0.08em] text-black/55">
-                          {paper.venue}
-                        </p>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {/* The papers the project rests on. Opening one folds the
+                  rest into a stack — see PaperPlates. */}
+              {i === 0 && <PaperPlates papers={canaryPapers} />}
             </section>
           ))}
 
@@ -119,7 +88,7 @@ export default function CanaryPage() {
               {canaryCitations.map((c) => (
                 <li
                   key={c.mla}
-                  className="antialiased pl-8 -indent-8 text-[14px] leading-[1.55] text-black/75"
+                  className="antialiased doc-justify pl-8 -indent-8 text-[14px] leading-[1.55] text-black/75"
                 >
                   {c.mla}
                   {c.locator && c.href && (

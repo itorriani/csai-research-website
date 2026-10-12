@@ -14,14 +14,14 @@ export default function AboutPage() {
       title="About"
       meta={<>CSAI Research &middot; Cal Poly, San Luis Obispo, California</>}
     >
-      <p className="doc-ink mt-12 text-[17px] leading-[1.45]">{aboutIntro}</p>
-      <p className="doc-ink mt-7 text-[17px] leading-[1.45]">{aboutLead}</p>
+      <p className="doc-ink doc-justify mt-12 text-[17px] leading-[1.45]">{aboutIntro}</p>
+      <p className="doc-ink doc-justify mt-7 text-[17px] leading-[1.45]">{aboutLead}</p>
 
       {/* The values take the same hanging hairline rules as the lists in the
           project documents, so the two read as one family. */}
       <ul className="rule-list mt-12 space-y-7">
         {coreValues.map((value) => (
-          <li key={value.term} className="doc-ink text-[17px] leading-[1.45]">
+          <li key={value.term} className="doc-ink doc-justify text-[17px] leading-[1.45]">
             <span className="font-sans text-[11px] uppercase tracking-[0.16em] text-black/45 antialiased">
               {value.term}
             </span>

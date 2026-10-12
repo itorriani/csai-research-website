@@ -151,6 +151,7 @@ export const projects: Project[] = [
     lab: "Multi-Agent Systems Group",
     location: "Cal Poly, San Luis Obispo, California",
     term: "2026–2027",
+    href: "/projects/social-simulation",
   },
 ];
 
@@ -164,6 +165,7 @@ export const previousProjects: Project[] = [
     lab: "Autonomy Group",
     location: "Cal Poly, San Luis Obispo, California",
     term: "2025–2026",
+    href: "/projects/adua",
   },
 ];
 
@@ -183,6 +185,8 @@ export type Paper = {
   /** Natural size of the page-one render, for next/image. */
   width: number;
   height: number;
+  /** Shown when the plate is opened. A few sentences, no more. */
+  blurb?: string;
 };
 
 export const mindTheNoisePapers: Paper[] = [
@@ -193,6 +197,8 @@ export const mindTheNoisePapers: Paper[] = [
     venue: "IEEE BIBM, 2021",
     width: 935,
     height: 1210,
+    blurb:
+      "Establishes that the Muse headset can filter noise events and recover usable artifacts \u2014 the foundational assumption of this project, since the Muse 2 is the only device it collects with. That a peer-reviewed paper vindicates one of the cheapest EEG rigs available is what lets the rest of the work be taken seriously.",
   },
   {
     slug: "wearable-eeg-signal-quality",
@@ -202,6 +208,8 @@ export const mindTheNoisePapers: Paper[] = [
     venue: "IEEE J. Biomed. Health Inform., 2020",
     width: 908,
     height: 1210,
+    blurb:
+      "Read before the Delorme paper. It establishes the problem rather than the solution: wearable headsets produce far noisier data than clinical collection, and the methods for handling that noise are largely undeveloped. The causes it names \u2014 uncontrolled environments, subjects in motion \u2014 are exactly the conditions this project has to work in.",
   },
   {
     slug: "artifact-detection-systematic-review",
@@ -211,6 +219,8 @@ export const mindTheNoisePapers: Paper[] = [
     venue: "Systematic Review",
     width: 910,
     height: 1287,
+    blurb:
+      "A systematic review of artifact-detection and artifact-category techniques for EEG from wearable devices. It supplies the taxonomy the other two papers are read against, surveying which detection families exist and where each has been shown to hold up.",
   },
 ];
 
@@ -331,7 +341,7 @@ export const canarySections: {
 }[] = [
   {
     label: "Hook",
-    body: "Prompt injection involves an attacker who hides instructions in content an AI receives, which can make the agent do malicious activity; it’s rated as the #1 risk on OWASP for AI applications, and in a large-scale public red-teaming competition every one of the 13 frontier models tested \u2014 Claude, ChatGPT, and Gemini among them \u2014 was successfully exploited. With Gartner projecting a 700% rise in enterprise applications carrying task-specific AI agents, if prompt injection can’t be properly addressed, corporations can be exploited, critical infrastructure can be penetrated, and technological development will slow down.",
+    body: "Prompt injection involves an attacker who hides instructions in content an AI receives, which can make the agent do malicious activity; it’s rated as the #1 risk on OWASP for AI applications, and work presented at NeurIPS finds that even top-tier models \u2014 Claude, ChatGPT, and Gemini among them \u2014 are deceived by simple, low-effort human-written injections, which partially succeed in up to 86% of cases. With Gartner projecting a 700% rise in enterprise applications carrying task-specific AI agents, if prompt injection can’t be properly addressed, corporations can be exploited, critical infrastructure can be penetrated, and technological development will slow down.",
   },
   {
     label: "Solution",
@@ -350,43 +360,44 @@ export const canarySections: {
 
 export const canaryPapers: Paper[] = [
   {
-    slug: "indirect-prompt-injection-realworld",
-    title:
-      "Not What You’ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
-    authors: "Greshake, Abdelnabi, Mishra, et al.",
-    venue: "ACM AISec, 2023",
+    slug: "wasp-web-agent-security",
+    title: "WASP: Benchmarking Web Agent Security Against Prompt Injection Attacks",
+    authors: "Evtimov, Zharmagambetov, Guo, et al.",
+    venue: "NeurIPS Datasets & Benchmarks, 2025",
     width: 935,
     height: 1210,
+    blurb:
+      "An end-to-end benchmark for web agents, rather than the single-step, over-simplified scenarios earlier tests relied on. It finds that even top-tier models with advanced reasoning are deceived by simple, low-effort, human-written injections. The sharper result is the split it exposes: attacks partially succeed in up to 86% of cases, yet agents often fail to carry the attacker\u2019s goal all the way through \u2014 security by incompetence rather than by design.",
   },
   {
-    slug: "formalizing-benchmarking-prompt-injection",
-    title: "Formalizing and Benchmarking Prompt Injection Attacks and Defenses",
-    authors: "Liu, Jia, Geng, Jia, Gong",
-    venue: "USENIX Security, 2024",
+    slug: "prompt-injection-threat-landscape",
+    title:
+      "The Landscape of Prompt Injection Threats in LLM Agents: From Taxonomy to Analysis",
+    authors: "Wang, Li, Xiang, et al.",
+    venue: "arXiv, 2026",
     width: 935,
     height: 1210,
+    blurb:
+      "A survey of 78 papers collected through October 2025, organised into a taxonomy of attacks and defenses. Useful to this project as a map of what has already been tried: optimisation-based attacks that are stealthy but query-hungry or reliant on white-box access, detection defenses that work but add a second model\u2019s worth of overhead, and isolation approaches that separate control from data.",
   },
   {
-    slug: "agentdojo-prompt-injection-benchmark",
+    slug: "evaluating-ipi-defenses",
     title:
-      "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
-    authors: "Debenedetti, Zhang, Balunović, et al.",
-    venue: "NeurIPS Datasets & Benchmarks, 2024",
-    width: 935,
-    height: 1210,
+      "Evaluating Indirect Prompt Injection Defenses in Tool-Using LLM Agents: Security, Utility, and Replication",
+    authors: "Khan, AlKhanbashi, Mohamed",
+    venue: "Computers, 2026",
+    width: 910,
+    height: 1287,
+    blurb:
+      "Four defenses and an undefended control, measured across three models on the AgentDojo banking benchmark. It is the closest published analogue to what CANARY sets out to build: it reports attack success rate alongside benign utility and utility under attack, so a defense that blocks injections by crippling the agent cannot look like a win.",
   },
 ];
 
 // Canary, alphabetised by author as MLA requires.
 export const canaryCitations: Citation[] = [
   {
-    mla: "Debenedetti, Edoardo, et al. \u201CAgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents.\u201D Advances in Neural Information Processing Systems 37, Datasets and Benchmarks Track, 2024.",
-    href: "/papers/agentdojo-prompt-injection-benchmark.pdf",
-  },
-  {
-    mla: "Dziemian, Mateusz, et al. \u201CHow Vulnerable Are AI Agents to Indirect Prompt Injections? Insights from a Large-Scale Public Competition.\u201D arXiv, 2026.",
-    locator: "arxiv.org/abs/2603.15714",
-    href: "https://arxiv.org/abs/2603.15714",
+    mla: "Evtimov, Ivan, et al. \u201CWASP: Benchmarking Web Agent Security Against Prompt Injection Attacks.\u201D Advances in Neural Information Processing Systems 39, Datasets and Benchmarks Track, 2025.",
+    href: "/papers/wasp-web-agent-security.pdf",
   },
   {
     mla: "Gartner, Inc. \u201CGartner Predicts 40% of Enterprise Apps Will Feature Task-Specific AI Agents by 2026, Up from Less Than 5% in 2025.\u201D Gartner Newsroom, 26 Aug. 2025.",
@@ -394,16 +405,189 @@ export const canaryCitations: Citation[] = [
     href: "https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025",
   },
   {
-    mla: "Greshake, Kai, et al. \u201CNot What You\u2019ve Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection.\u201D Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security, Association for Computing Machinery, 2023.",
-    href: "/papers/indirect-prompt-injection-realworld.pdf",
-  },
-  {
-    mla: "Liu, Yupei, et al. \u201CFormalizing and Benchmarking Prompt Injection Attacks and Defenses.\u201D Proceedings of the 33rd USENIX Security Symposium, USENIX Association, 2024.",
-    href: "/papers/formalizing-benchmarking-prompt-injection.pdf",
+    mla: "Khan, Adil, Khaled AlKhanbashi, and Azza Mohamed. \u201CEvaluating Indirect Prompt Injection Defenses in Tool-Using LLM Agents: Security, Utility, and Replication.\u201D Computers, vol. 15, no. 9, 2026, article 570.",
+    locator: "doi.org/10.3390/computers15090570",
+    href: "/papers/evaluating-ipi-defenses.pdf",
   },
   {
     mla: "OWASP GenAI Security Project. \u201CLLM01:2025 Prompt Injection.\u201D OWASP Top 10 for Large Language Model Applications, 2025.",
     locator: "genai.owasp.org",
     href: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+  },
+  {
+    mla: "Wang, Peiran, et al. \u201CThe Landscape of Prompt Injection Threats in LLM Agents: From Taxonomy to Analysis.\u201D arXiv, 2026.",
+    locator: "arxiv.org/abs/2602.10453",
+    href: "/papers/prompt-injection-threat-landscape.pdf",
+  },
+];
+
+// ------------------------------------------------------- SOCIAL SIMULATION
+
+// Namish's team, per the 2026-27 team selection sheet.
+export const socialSimulationTeam = [
+  "Jonah Depaz",
+  "Shreevatson Babu Sreegeetha",
+  "Taiki Jeffers",
+  "Robert Tigau",
+  "Vishal Murali Kannan",
+  "Saurish Suman",
+];
+
+export const socialSimulationSections: {
+  /** Kept as an authoring key only — the page renders no section headings. */
+  label: string;
+  body: string;
+  points?: string[];
+}[] = [
+  {
+    label: "Hook",
+    body: "96% of companies surveyed across more than 260 organisations run a form of beta-testing, where customers are given early access to a product to test it before an official launch. Part of the strength of beta-testing comes from the diversity of the customers; in work by senior researchers Margaret Burnett and Anita Sarma, viewing the same product through different cognitive frames surfaced inclusivity issues in over half of the interactions evaluated, more than 90% of which were later confirmed against independent empirical data. As more and more companies try to leverage AI agents to simulate this beta-testing, they struggle to emulate unique personalities and therefore cannot evaluate products effectively.",
+  },
+  {
+    label: "Solution",
+    body: "Social Simulation addresses this problem in three ways: finding novel ways to simulate realistic personalities, incorporating new cognitive perspectives that haven’t been considered, and visualising the process in intuitive ways. This includes using real, existing personas like actors and hosts instead of text-based prompts, and experimenting with ideating unique personas like impatience and radicalism.",
+  },
+  {
+    label: "Future Opportunities",
+    body: "The methods developed in this research have the potential to:",
+    points: [
+      "Simulate beta-testing with larger scale, diversity, and accuracy than current methods can achieve.",
+      "Create novel visualisations that make agentic beta-testing intuitive to all clients, especially considering the modern atmosphere of non-technical developers.",
+      "Discover unique friction points in applications by leveraging unexplored cognitive perspectives.",
+    ],
+  },
+];
+
+export const socialSimulationPapers: Paper[] = [
+  {
+    slug: "gendermag-ten-teams",
+    title:
+      "Engineering Gender-Inclusivity into Software: Ten Teams’ Tales from the Trenches",
+    authors: "Hilderbrand, Perdriau, Letaw, et al.",
+    venue: "ICSE, 2020",
+    width: 935,
+    height: 1210,
+    blurb:
+      "Ten industry teams applying GenderMag, a walkthrough method that evaluates software through several cognitive styles rather than one. Teams found inclusivity issues in over half the interactions they examined, and in a companion lab study more than 90% of issues surfaced this way were confirmed against independent empirical data \u2014 the empirical ground for simulating diverse testers at all.",
+  },
+  {
+    slug: "generative-agents-simulacra",
+    title: "Generative Agents: Interactive Simulacra of Human Behavior",
+    authors: "Park, O’Brien, Cai, et al.",
+    venue: "ACM UIST, 2023",
+    width: 935,
+    height: 1210,
+    blurb:
+      "The paper that made believable simulated people tractable: agents with memory, reflection and planning, left to run in a small sandboxed town. It is the architectural precedent for Social Simulation \u2014 the demonstration that persona behaviour can be generated rather than scripted.",
+  },
+  {
+    slug: "generative-agents-1000-people",
+    title:
+      "LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals",
+    authors: "Park, Zou, Kamphorst, et al.",
+    venue: "arXiv, 2024",
+    width: 935,
+    height: 1210,
+    blurb:
+      "Agents grounded in interview transcripts from real individuals rather than written prompts, then tested on whether they reproduce those people\u2019s survey and behavioural responses. Directly relevant to this project\u2019s bet that grounding a persona in a real person outperforms describing one in text.",
+  },
+];
+
+// Social Simulation, alphabetised by author as MLA requires.
+export const socialSimulationCitations: Citation[] = [
+  {
+    mla: "Centercode. “Beta Testing Industry Survey Report 2016.” Centercode, 2016. Survey of 338 respondents across more than 260 companies; 96% run customer validation tests before release.",
+    locator: "centercode.com",
+    href: "https://www2.centercode.com/industry-survey-report-2016.html",
+  },
+  {
+    mla: "Hilderbrand, Claudia, et al. “Engineering Gender-Inclusivity into Software: Ten Teams’ Tales from the Trenches.” Proceedings of the 42nd International Conference on Software Engineering, Association for Computing Machinery, 2020.",
+    href: "/papers/gendermag-ten-teams.pdf",
+  },
+  {
+    mla: "Park, Joon Sung, et al. “Generative Agents: Interactive Simulacra of Human Behavior.” Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology, Association for Computing Machinery, 2023.",
+    href: "/papers/generative-agents-simulacra.pdf",
+  },
+  {
+    mla: "Park, Joon Sung, et al. “LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals.” arXiv, 2024.",
+    locator: "arxiv.org/abs/2411.10109",
+    href: "https://arxiv.org/abs/2411.10109",
+  },
+];
+
+// ------------------------------------------------------------------- ADUA
+
+export const aduaSections: {
+  /** Kept as an authoring key only — the page renders no section headings. */
+  label: string;
+  body: string;
+  points?: string[];
+}[] = [
+  {
+    label: "Outcome",
+    body: "ADUA developed two main methods to address autonomy in unknown domains. Firstly, a bi-model consensus that used a low-confidence threshold alongside open-world model detectors to recognise unknown objects. Secondly, an original use of colour blocks and frame-palette tracking to check unknown objects cheaply, without a heavy meta-learning model. Together these resulted in a 93%-accurate pipeline.",
+  },
+  {
+    label: "Methods",
+    body: "ADUA set out to experiment with three main methods that could address autonomy in unknown domains using modern meta-learning models. Firstly, a bi-model consensus between an open-set model, which can detect almost all objects in the normal driving scenario, and an object-agnostic model, which can detect any object in general, to detect unknown objects. Secondly, a stripped-down version of the initial pipeline which, instead of leveraging the heavy object-agnostic model, replaces it with a lighter and unique method that uses sudden colour-palette shifts in frames to indicate unknown objects. Finally, a bi-model consensus between an open-set model and a conceptual scene-understanding model, which can add logical context to whatever situation a model is in.",
+  },
+  {
+    label: "Future Opportunities",
+    body: "This research has the potential to:",
+    points: [
+      "Explore and promote the field of meta-learning, which remains one of the most important logical leaps of artificial intelligence that haven’t been made yet.",
+      "Expand autonomous machines to edge devices and cheaper hardware, promoting accessibility within self-driving use cases like humanitarian aid and precision agriculture.",
+      "Explore the age-old question of how a model actually operates beyond the black box, which researchers at Anthropic, Google, and elsewhere are currently working on.",
+    ],
+  },
+];
+
+export const aduaPapers: Paper[] = [
+  {
+    slug: "open-world-object-detection",
+    title: "Towards Open World Object Detection",
+    authors: "Joseph, Khan, Khan, Balasubramanian",
+    venue: "CVPR, 2021",
+    width: 935,
+    height: 1210,
+    blurb:
+      "Defines the open-world problem this project is built on: a detector must identify objects it was never trained on, label them unknown rather than forcing them into a known class, and then learn them incrementally once labels arrive. It is the formulation behind the open-set half of the bi-model consensus.",
+  },
+  {
+    slug: "segment-anything",
+    title: "Segment Anything",
+    authors: "Kirillov, Mintun, Ravi, et al.",
+    venue: "arXiv, 2023",
+    width: 935,
+    height: 1210,
+    blurb:
+      "The object-agnostic model the first pipeline pairs with an open-set detector: promptable segmentation that will return a mask for essentially anything, with no notion of class. Its cost is also the reason the second method exists — palette tracking was built to approximate this signal without carrying a model this heavy.",
+  },
+  {
+    slug: "anomaly-segmentation-benchmark",
+    title: "SegmentMeIfYouCan: A Benchmark for Anomaly Segmentation",
+    authors: "Chan, Lis, Uhlemeyer, et al.",
+    venue: "NeurIPS Datasets & Benchmarks, 2021",
+    width: 935,
+    height: 1210,
+    blurb:
+      "The evaluation side of the problem: how to measure a model finding road obstacles and anomalous objects it has no class for, rather than just how well it labels the classes it knows. It sets the terms any accuracy claim about unknown-object detection has to be read against.",
+  },
+];
+
+// ADUA, alphabetised by author as MLA requires.
+export const aduaCitations: Citation[] = [
+  {
+    mla: "Chan, Robin, et al. “SegmentMeIfYouCan: A Benchmark for Anomaly Segmentation.” Advances in Neural Information Processing Systems 35, Datasets and Benchmarks Track, 2021.",
+    href: "/papers/anomaly-segmentation-benchmark.pdf",
+  },
+  {
+    mla: "Joseph, K. J., et al. “Towards Open World Object Detection.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, IEEE, 2021.",
+    href: "/papers/open-world-object-detection.pdf",
+  },
+  {
+    mla: "Kirillov, Alexander, et al. “Segment Anything.” arXiv, 2023.",
+    locator: "arxiv.org/abs/2304.02643",
+    href: "/papers/segment-anything.pdf",
   },
 ];
