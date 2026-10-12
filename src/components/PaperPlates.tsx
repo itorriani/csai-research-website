@@ -7,26 +7,48 @@ import usePrefersReducedMotion from "@/lib/usePrefersReducedMotion";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const GAP = 20;
+const MOVE = 800;
 
+// The read-more strip, inverted from the research index because this page is
+// white. The left pad cancels the trailing letter-space so the tracked caps
+// sit optically centred.
 const STRIP_CLASS =
   "font-sans mt-7 flex h-12 w-full items-center justify-center bg-black pl-[0.18em] text-center text-[12px] font-bold uppercase tracking-[0.18em] text-white antialiased transition-colors duration-300 hover:bg-black/80";
 
 // The papers a project rests on. Closed, they sit in a row; opened, they
-// gather into a stack on the left and the chosen one's description takes
-// the space they vacate — the same fold the research index uses.
+// gather into a stack and the chosen one's description takes the space they
+// vacate — the same fold the research index uses.
 //
-// The interaction announces itself rather than waiting to be found: once
-// the row scrolls into view the plates drift a few pixels toward the stack
-// and settle back, which shows they move without explaining it.
+// The plates keep a running order rather than fixed slots. Opening one moves
+// it to the front of that order and it stays there, so closing re-forms the
+// row in the new order instead of unwinding to where things began. Nothing
+// has to travel backwards, which is what made the revert read as a glitch.
 export default function PaperPlates({ papers }: { papers: Paper[] }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [order, setOrder] = useState<string[]>(() => papers.map((p) => p.slug));
   const [selected, setSelected] = useState<string | null>(null);
   const [demoing, setDemoing] = useState(false);
   const [inView, setInView] = useState(false);
+  const [plateW, setPlateW] = useState(0);
   const reduced = usePrefersReducedMotion();
 
-  // Track visibility: the demo should only run while the row is actually
-  // on screen, and should not burn timers otherwise.
+  // Both ends of the move have to be in the same unit or the browser cannot
+  // interpolate them: a calc() carrying a percentage against a flat px value
+  // snaps instead of animating. The calc fallback below resolves to exactly
+  // the same place, so the swap on first measure moves nothing.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      setPlateW((w - (papers.length - 1) * GAP) / papers.length);
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    measure();
+    return () => ro.disconnect();
+  }, [papers.length]);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -37,7 +59,6 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
     return () => io.disconnect();
   }, []);
 
-  // Escape backs out of the stack.
   useEffect(() => {
     if (!selected) return;
     const onKey = (e: KeyboardEvent) => {
@@ -47,9 +68,10 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [selected]);
 
-  // Every ten seconds the plates perform the fold and undo it, so the
+  // Every ten seconds the plates perform the fold and release it, so the
   // interaction is demonstrated rather than waiting to be stumbled on. It
-  // runs only while the row is in view and nothing is open, and not at all
+  // runs only while the row is on screen with nothing open — which also
+  // means it costs nothing in a background tab — and is skipped entirely
   // for readers who have asked for less motion.
   useEffect(() => {
     if (reduced || !inView || selected) return;
@@ -57,7 +79,7 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
     let release = 0;
     const tick = window.setInterval(() => {
       setDemoing(true);
-      release = window.setTimeout(() => setDemoing(false), 900);
+      release = window.setTimeout(() => setDemoing(false), MOVE + 250);
     }, 10000);
 
     return () => {
@@ -67,16 +89,17 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
     };
   }, [reduced, inView, selected]);
 
-  const selectedIndex = papers.findIndex((p) => p.slug === selected);
-  const open = selectedIndex >= 0;
-  const selectedPaper = open ? papers[selectedIndex] : null;
+  const selectedPaper = papers.find((p) => p.slug === selected) ?? null;
+  const stacked = selectedPaper !== null || demoing;
 
-  // Depth within the pile: the chosen plate rises to 0, the rest keep their
-  // reading order underneath it.
-  const rankOf = (i: number) => {
-    if (!open) return i;
-    if (i === selectedIndex) return 0;
-    return i < selectedIndex ? i + 1 : i;
+  // Position in the running order drives everything: the slot in the row,
+  // the depth in the pile, and the stacking context. Because it only changes
+  // when a plate is raised, nothing re-orders mid-flight.
+  const posOf = (slug: string) => order.indexOf(slug);
+
+  const raise = (slug: string) => {
+    setOrder((prev) => [slug, ...prev.filter((s) => s !== slug)]);
+    setSelected(slug);
   };
 
   const n = papers.length;
@@ -92,14 +115,15 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
         style={{ width: plateWidth }}
       />
 
-      {papers.map((paper, i) => {
-        const rank = rankOf(i);
+      {papers.map((paper) => {
+        const pos = posOf(paper.slug);
         const isTop = paper.slug === selected;
 
-        const stacked = open || demoing;
         const transform = stacked
-          ? `translate3d(${rank * 5}px, ${rank * 5}px, 0)`
-          : `translate3d(calc(${i} * (100% + ${GAP}px)), 0, 0)`;
+          ? `translate3d(${pos * 5}px, ${pos * 5}px, 0)`
+          : plateW
+            ? `translate3d(${pos * (plateW + GAP)}px, 0, 0)`
+            : `translate3d(calc(${pos} * (100% + ${GAP}px)), 0, 0)`;
 
         return (
           <div
@@ -107,14 +131,14 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
             className="absolute left-0 top-0"
             style={{
               width: plateWidth,
-              zIndex: n - rank,
+              zIndex: n - pos,
               transform,
-              transition: reduced ? undefined : `transform 800ms ${EASE}`,
+              transition: reduced ? undefined : `transform ${MOVE}ms ${EASE}`,
             }}
           >
             <button
               type="button"
-              onClick={() => setSelected(isTop ? null : paper.slug)}
+              onClick={() => (isTop ? setSelected(null) : raise(paper.slug))}
               aria-expanded={isTop}
               className={`group block w-full text-left focus-visible:outline-none ${
                 stacked ? "" : "hover:-translate-y-1"
@@ -129,9 +153,7 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
                   sizes="(min-width: 640px) 33vw, 100vw"
                   className="h-full w-full object-cover object-top grayscale"
                 />
-
               </div>
-
             </button>
           </div>
         );
@@ -151,7 +173,7 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
           pointerEvents: selectedPaper ? "auto" : "none",
           transition: reduced
             ? undefined
-            : `opacity 600ms ${EASE} 180ms, transform 800ms ${EASE} 140ms`,
+            : `opacity 600ms ${EASE} 180ms, transform ${MOVE}ms ${EASE} 140ms`,
         }}
       >
         {selectedPaper && (
@@ -159,14 +181,11 @@ export default function PaperPlates({ papers }: { papers: Paper[] }) {
             <h3 className="doc-ink text-[17px] leading-[1.35]">
               {selectedPaper.title}
             </h3>
+
             <p className="doc-ink doc-justify mt-5 text-[15px] leading-[1.5]">
               {selectedPaper.blurb}
             </p>
 
-            {/* The same strip the research index uses to leave a card,
-                inverted because this page is white. The left pad cancels
-                the trailing letter-space so the tracked caps sit optically
-                centred. */}
             <a
               href={`/papers/${selectedPaper.slug}.pdf`}
               target="_blank"
