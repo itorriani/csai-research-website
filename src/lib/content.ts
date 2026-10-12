@@ -517,6 +517,14 @@ export const socialSimulationCitations: Citation[] = [
 
 // ------------------------------------------------------------------- ADUA
 
+// Ivan's team, listed as on the other three sheets.
+export const aduaTeam = [
+  "Ceyanna Badyal",
+  "Saurish Suman",
+  "Vinayak Kohli",
+  "Zach Goldwyn",
+];
+
 export const aduaSections: {
   /** Kept as an authoring key only — the page renders no section headings. */
   label: string;

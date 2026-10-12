@@ -3,7 +3,12 @@ import BrainMark from "@/components/BrainMark";
 import HeroNav from "@/components/HeroNav";
 import PaperPlates from "@/components/PaperPlates";
 import SiteFooter from "@/components/SiteFooter";
-import { aduaCitations, aduaPapers, aduaSections } from "@/lib/content";
+import {
+  aduaCitations,
+  aduaPapers,
+  aduaSections,
+  aduaTeam,
+} from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "ADUA | CSAI Research",
@@ -41,8 +46,10 @@ export default function AduaPage() {
           </div>
 
           <p className="antialiased mt-5 text-[15px] leading-[1.6] text-black/65">
-            Out-of-distribution autonomous navigation &middot; Autonomy Group
-            &middot; 2025&ndash;2026
+            Out-of-distribution autonomous navigation &middot; 2025&ndash;2026
+            <br />
+            With {aduaTeam.slice(0, -1).join(", ")}, and{" "}
+            {aduaTeam[aduaTeam.length - 1]}
           </p>
 
           {aduaSections.map((section, i) => (
