@@ -66,7 +66,7 @@ export const heroNavLeft = [
 ];
 
 export const heroNavRight = [
-  { label: "Editorial Board", href: "#" },
+  { label: "Team", href: "/team" },
   { label: "Join", href: "#" },
 ];
 
@@ -88,7 +88,7 @@ export const footerColumns: {
     heading: "About",
     links: [
       { label: "Who We Are", href: "/about" },
-      { label: "Editorial Board" },
+      { label: "Team", href: "/team" },
       { label: "Application" },
       { label: "Contact Us", href: "/contact" },
     ],
@@ -670,3 +670,23 @@ export const editorialPolicyDocs: PolicyDoc[] = [
     href: "https://conferences.ieeeauthorcenter.ieee.org/write-your-paper/structure-your-paper/",
   },
 ];
+
+// ----------------------------------------------------------------- TEAM
+
+// The three names on the About sheet, carried here rather than retyped.
+// The About sheet reads "Director and Associate Directors of Research" over
+// the three in this order, which is where the split below comes from.
+export const directors: { name: string; title: string }[] = [
+  { name: "Ivan Torriani", title: "Director of Research" },
+  { name: "Trace Macias", title: "Associate Director of Research" },
+  { name: "Marek Seablom-Michel", title: "Associate Director of Research" },
+];
+
+// Each project's roster, keyed to the project ids in `projects` and
+// `previousProjects` so the page stays in step with the index.
+export const teamsByProject: Record<string, string[]> = {
+  eeg: mindTheNoiseTeam,
+  canary: canaryTeam,
+  ss: socialSimulationTeam,
+  adua: aduaTeam,
+};
