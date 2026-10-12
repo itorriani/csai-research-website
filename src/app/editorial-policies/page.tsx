@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import DocumentPage from "@/components/DocumentPage";
+import PolicyPlates from "@/components/PolicyPlates";
 import { editorialPolicy, editorialPolicyDocs } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -33,24 +34,10 @@ export default function EditorialPoliciesPage() {
         Please refer to the links below to see the official documents.
       </p>
 
-      {/* The same strip the papers use to leave a plate, one per document. */}
-      <ul className="mt-8 space-y-5">
-        {editorialPolicyDocs.map((doc) => (
-          <li key={doc.href}>
-            <p className="antialiased text-[14px] leading-[1.5] text-black/65">
-              {doc.issuer}
-            </p>
-            <a
-              href={doc.href}
-              target="_blank"
-              rel="noopener"
-              className="font-sans mt-2 flex h-12 w-full items-center justify-center bg-black pl-[0.18em] text-center text-[12px] font-bold uppercase tracking-[0.18em] text-white antialiased transition-colors duration-300 hover:bg-black/80"
-            >
-              {doc.title}
-            </a>
-          </li>
-        ))}
-      </ul>
+      {/* Blank sheets in the form of the Collections covers, folding like
+          the papers on a project document. */}
+      <PolicyPlates docs={editorialPolicyDocs} />
+
     </DocumentPage>
   );
 }

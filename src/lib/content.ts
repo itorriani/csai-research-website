@@ -635,19 +635,31 @@ export const editorialPolicy = [
   "We use IEEE’s official guidelines to organise our research into claims, limitations, and further sections. Then we use the official NeurIPS Paper Checklist Guidelines, used by the actual NeurIPS panel, to ensure CSAI Research papers meet certain ethical, credibility, and significance standards. By strictly following these standards, our research has the potential to be not only impressive for a college club, but impressive enough for national consideration.",
 ];
 
-export const editorialPolicyDocs: {
+export type PolicyDoc = {
+  /** Set on the sheet itself, as a wordmark. */
+  wordmark: string;
+  /** The single word under it: CHECKLIST, STRUCTURE. */
+  label: string;
   title: string;
-  issuer: string;
+  blurb: string;
   href: string;
-}[] = [
+};
+
+export const editorialPolicyDocs: PolicyDoc[] = [
   {
+    wordmark: "NeurIPS",
+    label: "Checklist",
     title: "NeurIPS Paper Checklist Guidelines",
-    issuer: "Neural Information Processing Systems",
+    blurb:
+      "The checklist the NeurIPS panel itself applies: every claim in the abstract matched to evidence in the paper, limitations stated rather than omitted, and the ethical, reproducibility and societal-impact questions answered in writing. CSAI papers are held to the same questions before they are considered finished.",
     href: "https://neurips.cc/public/guides/PaperChecklist",
   },
   {
-    title: "Structure Your Paper",
-    issuer: "IEEE Author Center",
+    wordmark: "IEEE",
+    label: "Structure",
+    title: "Structure Your Paper \u2014 IEEE Author Center",
+    blurb:
+      "IEEE\u2019s guidance on how a paper is built: what belongs in the abstract and introduction, how methods and results are separated, and where limitations and further work sit. It is what gives CSAI research its claims-and-limitations shape rather than a loose write-up.",
     href: "https://conferences.ieeeauthorcenter.ieee.org/write-your-paper/structure-your-paper/",
   },
 ];
