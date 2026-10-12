@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     "Artifact detection and clean-data retention in Muse 2 EEG. Research led by Zach Goldwyn.",
 };
 
+const HEADINGS = ["Introduction", "Solutions", "Future Opportunities"];
+
+const HEADING_CLASS =
+  "doc-heading mb-5 text-[20px] leading-[1.3] text-black";
+
 export default function MindTheNoisePage() {
   return (
     <>
@@ -54,7 +59,9 @@ export default function MindTheNoisePage() {
           </p>
 
           {mindTheNoiseSections.map((section, i) => (
-            <section key={section.label} className="mt-12">
+            <section key={section.label} className="mt-14">
+              <h2 className={HEADING_CLASS}>{HEADINGS[i]}</h2>
+
               <p className="doc-ink doc-justify text-[17px] leading-[1.45]">{section.body}</p>
 
               {section.points && (
@@ -71,6 +78,9 @@ export default function MindTheNoisePage() {
 
               {/* The papers the project rests on. Opening one folds the
                   rest into a stack — see PaperPlates. */}
+              {i === 0 && (
+                <h2 className={`${HEADING_CLASS} mt-14`}>Literature Review</h2>
+              )}
               {i === 0 && <PaperPlates papers={mindTheNoisePapers} />}
             </section>
           ))}
@@ -79,9 +89,7 @@ export default function MindTheNoisePage() {
               appears above; the three papers are the same ones plated in
               the body, and link to the PDFs already on the site. */}
           <section className="mt-20 border-t border-black pt-10">
-            <h2 className="antialiased font-sans text-[10px] uppercase tracking-[0.18em] text-black/55">
-              Works Cited
-            </h2>
+            <h2 className={HEADING_CLASS}>Works Cited</h2>
 
             {/* MLA 9: alphabetised by author, hanging indent, locator last. */}
             <ul className="mt-6 space-y-4">

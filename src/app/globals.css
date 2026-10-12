@@ -108,3 +108,10 @@ body {
 .doc-justify {
   text-align-last: auto;
 }
+
+/* Document subheadings. HK Venetian ships a single Regular cut, so weight
+   comes from a heavier stroke than the body carries — a synthetic bold
+   would thicken the stems unevenly and close up the serifs at this size. */
+.doc-heading {
+  -webkit-text-stroke: 0.7px currentColor;
+}
