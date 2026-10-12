@@ -115,3 +115,28 @@ body {
 .doc-heading {
   -webkit-text-stroke: 0.7px currentColor;
 }
+
+/* Page entrance. Opacity only, and short — a page that slides or scales on
+   every navigation reads as a transition rather than as a document opening.
+   `backwards` holds the opening frame so there is no flash of full-opacity
+   content before the animation starts, while leaving the settled state as
+   the element's own opacity — a page can never be stranded invisible if the
+   animation is prevented from finishing. */
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-fade {
+  animation: page-fade 420ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade {
+    animation: none;
+  }
+}

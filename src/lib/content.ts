@@ -70,18 +70,41 @@ export const heroNavRight = [
   { label: "Join", href: "#" },
 ];
 
-export const footerColumns = [
+// A link without an href is still a placeholder; the footer renders it as
+// plain text rather than a dead anchor.
+export const footerColumns: {
+  heading: string;
+  links: { label: string; href?: string }[];
+}[] = [
   {
     heading: "For Authors",
-    links: ["Submission Guidelines", "Editorial Policies", "Author Resources"],
+    links: [
+      { label: "Submission Guidelines" },
+      { label: "Editorial Policies" },
+      { label: "Author Resources" },
+    ],
   },
   {
     heading: "About",
-    links: ["Who We Are", "Editorial Board", "Application", "Contact Us"],
+    links: [
+      { label: "Who We Are", href: "/about" },
+      { label: "Editorial Board" },
+      { label: "Application" },
+      { label: "Contact Us" },
+    ],
   },
   {
     heading: "Connect",
-    links: ["LinkedIn", "Social"],
+    links: [
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/company/cs-ai-cal-poly/",
+      },
+      {
+        label: "Instagram",
+        href: "https://www.instagram.com/calpolycsai/",
+      },
+    ],
   },
 ];
 

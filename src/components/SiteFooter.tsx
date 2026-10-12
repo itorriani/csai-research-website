@@ -13,10 +13,20 @@ export default function SiteFooter() {
               </h3>
               <ul className="space-y-2 text-[15px] text-black/70">
                 {col.links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="hover:underline">
-                      {link}
-                    </a>
+                  <li key={link.label}>
+                    {link.href ? (
+                      <a
+                        href={link.href}
+                        className="hover:underline"
+                        {...(link.href.startsWith("http")
+                          ? { target: "_blank", rel: "noreferrer" }
+                          : {})}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      link.label
+                    )}
                   </li>
                 ))}
               </ul>

@@ -71,6 +71,10 @@ export default function ProjectPostcards({
   const sectionRef = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [order, setOrder] = useState<string[]>(() => projects.map((p) => p.id));
+  const [cardW, setCardW] = useState(0);
+  const [demoing, setDemoing] = useState(false);
+  const rowRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
 
   // Below two cards there is nothing to stack, so the panel stays a plain
@@ -109,15 +113,53 @@ export default function ProjectPostcards({
     return () => window.removeEventListener("keydown", onKey);
   }, [selected]);
 
-  const selectedIndex = projects.findIndex((p) => p.id === selected);
-  const selectedProject = selectedIndex >= 0 ? projects[selectedIndex] : null;
+  // Both ends of the move must share a unit or the browser cannot
+  // interpolate them: a calc() carrying a percentage against flat px snaps.
+  // The calc fallback resolves to the same place, so the first measure
+  // moves nothing.
+  useEffect(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      setCardW((w - (projects.length - 1) * GAP) / projects.length);
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    measure();
+    return () => ro.disconnect();
+  }, [projects.length]);
 
-  // Depth within the pile: the chosen card rises to 0, the rest keep their
-  // reading order underneath it.
-  const rankOf = (i: number) => {
-    if (selectedIndex < 0) return i;
-    if (i === selectedIndex) return 0;
-    return i < selectedIndex ? i + 1 : i;
+  // The same demonstration the papers run: every ten seconds the row folds
+  // and releases, so the interaction is shown rather than stumbled on. Only
+  // while on screen with nothing open, and never under reduced motion.
+  useEffect(() => {
+    if (reduced || !revealed || selected) return;
+
+    let release = 0;
+    const tick = window.setInterval(() => {
+      setDemoing(true);
+      release = window.setTimeout(() => setDemoing(false), 1150);
+    }, 10000);
+
+    return () => {
+      window.clearInterval(tick);
+      window.clearTimeout(release);
+      setDemoing(false);
+    };
+  }, [reduced, revealed, selected]);
+
+  const selectedProject = projects.find((p) => p.id === selected) ?? null;
+
+  // Position in the running order drives the slot, the depth in the pile and
+  // the stacking context alike. It only changes when a card is raised, so
+  // nothing re-orders mid-flight — z-index cannot be animated, and changing
+  // it while the sheets travel is what popped them over one another.
+  const posOf = (id: string) => order.indexOf(id);
+
+  const raise = (id: string) => {
+    setOrder((prev) => [id, ...prev.filter((x) => x !== id)]);
+    setSelected(id);
   };
 
   const n = projects.length;
@@ -172,7 +214,7 @@ export default function ProjectPostcards({
             })}
           </div>
         ) : (
-          <div className="relative">
+          <div ref={rowRef} className="relative">
             {/* In-flow spacer: fixes the row's height so the cards can be
                 absolutely positioned and animate on transform alone. */}
             <div
@@ -182,16 +224,20 @@ export default function ProjectPostcards({
             />
 
             {projects.map((project, i) => {
-              const rank = rankOf(i);
-              const isOpen = selectedIndex >= 0;
+              const pos = posOf(project.id);
+              const isOpen = selectedProject !== null;
+              const stacked = isOpen || demoing;
               const isTop = project.id === selected;
 
-              // Closed: laid out across the row. Open: gathered into a squared
-              // pile on the left, each sheet offset by a consistent step so
-              // the edges below the top card read as a clean stack.
-              const transform = isOpen
-                ? `translate3d(${rank * 4}px, ${rank * 4}px, 0)`
-                : `translate3d(calc(${i} * (100% + ${GAP}px)), 0, 0)`;
+              // Closed: laid out across the row, in the running order. Open:
+              // gathered into a squared pile on the left, each sheet offset
+              // by a consistent step. Releasing re-forms the row in the new
+              // order rather than unwinding, so nothing travels backwards.
+              const transform = stacked
+                ? `translate3d(${pos * 4}px, ${pos * 4}px, 0)`
+                : cardW
+                  ? `translate3d(${pos * (cardW + GAP)}px, 0, 0)`
+                  : `translate3d(calc(${pos} * (100% + ${GAP}px)), 0, 0)`;
 
               return (
                 <div
@@ -199,25 +245,23 @@ export default function ProjectPostcards({
                   className="absolute left-0 top-0"
                   style={{
                     width: cardWidth,
-                    zIndex: n - rank,
+                    zIndex: n - pos,
                     transform,
                     opacity: revealed || reduced ? 1 : 0,
                     transition: reduced
                       ? undefined
                       : `transform 900ms ${EASE}, opacity 700ms ${EASE}`,
                     transitionDelay:
-                      revealed && !isOpen && selectedIndex < 0
-                        ? `${i * 110}ms`
-                        : "0ms",
+                      revealed && !stacked ? `${i * 110}ms` : "0ms",
                   }}
                 >
                   <button
                     type="button"
-                    onClick={() => setSelected(isTop ? null : project.id)}
+                    onClick={() => (isTop ? setSelected(null) : raise(project.id))}
                     aria-expanded={isTop}
                     aria-controls={`${id}-detail`}
                     className={`${CARD_CLASS} text-left transition-transform duration-500 ease-out ${
-                      isOpen ? "" : "hover:-translate-y-1.5"
+                      stacked ? "" : "hover:-translate-y-1.5"
                     } focus-visible:outline-none`}
                   >
                     <CardFace project={project} />
