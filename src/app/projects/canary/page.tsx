@@ -84,7 +84,7 @@ export default function CanaryPage() {
               appears above; the three papers are the same ones plated in
               the body, and link to the PDFs already on the site. */}
           <section className="mt-20 border-t border-black pt-10">
-            <h2 className="antialiased font-sans text-[10px] uppercase tracking-[0.18em] text-black/55">
+            <h2 className="doc-heading text-[20px] leading-[1.3] text-black">
               Works Cited
             </h2>
 
