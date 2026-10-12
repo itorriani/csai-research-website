@@ -80,7 +80,7 @@ export const footerColumns: {
     heading: "For Authors",
     links: [
       { label: "Submission Guidelines" },
-      { label: "Editorial Policies" },
+      { label: "Editorial Policies", href: "/editorial-policies" },
       { label: "Author Resources" },
     ],
   },
@@ -90,7 +90,7 @@ export const footerColumns: {
       { label: "Who We Are", href: "/about" },
       { label: "Editorial Board" },
       { label: "Application" },
-      { label: "Contact Us" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {
@@ -107,6 +107,11 @@ export const footerColumns: {
     ],
   },
 ];
+
+// ---------------------------------------------------------------- CONTACT
+
+// Where the contact sheet's messages are addressed.
+export const contactEmail = "sotivantorriani@gmail.com";
 
 export const aboutIntro =
   "CSAI Research was created to give one of the most professional research experiences for undergraduates at California Polytechnic State University, San Luis Obispo.";
@@ -620,5 +625,29 @@ export const aduaCitations: Citation[] = [
     mla: "Kirillov, Alexander, et al. “Segment Anything.” arXiv, 2023.",
     locator: "arxiv.org/abs/2304.02643",
     href: "/papers/segment-anything.pdf",
+  },
+];
+
+// ------------------------------------------------- EDITORIAL POLICIES
+
+export const editorialPolicy = [
+  "To produce the most credible and professional research, the CSAI Research Division follows the NeurIPS and IEEE guidelines and policies. NeurIPS, founded in 1987, has produced some of the most influential papers in the AI/ML revolution like AlexNet and GANs, receives over 20,000 submissions annually, and is ranked #7 among academic publications worldwide. Similarly, IEEE is one of the most impactful AI journals, producing nearly a third of the world’s computational research, and is one of the largest computing organisations in the world with over 450,000 members worldwide.",
+  "We use IEEE’s official guidelines to organise our research into claims, limitations, and further sections. Then we use the official NeurIPS Paper Checklist Guidelines, used by the actual NeurIPS panel, to ensure CSAI Research papers meet certain ethical, credibility, and significance standards. By strictly following these standards, our research has the potential to be not only impressive for a college club, but impressive enough for national consideration.",
+];
+
+export const editorialPolicyDocs: {
+  title: string;
+  issuer: string;
+  href: string;
+}[] = [
+  {
+    title: "NeurIPS Paper Checklist Guidelines",
+    issuer: "Neural Information Processing Systems",
+    href: "https://neurips.cc/public/guides/PaperChecklist",
+  },
+  {
+    title: "Structure Your Paper",
+    issuer: "IEEE Author Center",
+    href: "https://conferences.ieeeauthorcenter.ieee.org/write-your-paper/structure-your-paper/",
   },
 ];
