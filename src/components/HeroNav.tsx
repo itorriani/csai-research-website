@@ -22,6 +22,13 @@ function SearchIcon() {
 const LINK =
   "text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60";
 
+// On a white band the links carry full black and the document's own
+// stroke: Venetian ships a single Regular cut, so at 12px tracked caps the
+// ink has to come from the stroke rather than from a weight that is not
+// there. The lockup is left on the nav's own tone, a shade off black, so
+// the house mark stays the quieter mark of the two.
+const LINK_LIGHT = `${LINK} doc-ink text-black`;
+
 // `tone` only flips the ink: "dark" is the nav over the black pages, "light"
 // is the nav on a white band. The light nav additionally carries the hover
 // treatment — a faint grey pane washes across the whole bar. The ink stays
@@ -29,6 +36,7 @@ const LINK =
 // type, so inverting the links would make them unreadable.
 export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) {
   const light = tone === "light";
+  const link = light ? LINK_LIGHT : LINK;
   return (
     <div className="group relative">
       {light && (
@@ -46,7 +54,7 @@ export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) 
         <ul className="flex flex-wrap items-center gap-x-7 gap-y-2">
           {heroNavLeft.map((item) => (
             <li key={item.label}>
-              <a href={item.href} className={LINK}>
+              <a href={item.href} className={link}>
                 {item.label}
               </a>
             </li>
@@ -64,7 +72,7 @@ export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) 
         <ul className="flex flex-wrap items-center justify-end gap-x-7 gap-y-2">
           {heroNavRight.map((item) => (
             <li key={item.label}>
-              <a href={item.href} className={LINK}>
+              <a href={item.href} className={link}>
                 {item.label}
               </a>
             </li>
@@ -73,7 +81,9 @@ export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) 
             <a
               href="#"
               aria-label="Search"
-              className="block transition-opacity hover:opacity-60"
+              className={`block transition-opacity hover:opacity-60 ${
+                light ? "text-black" : ""
+              }`}
             >
               <SearchIcon />
             </a>
