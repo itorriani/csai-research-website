@@ -556,6 +556,10 @@ export const aduaSections: {
   points?: string[];
 }[] = [
   {
+    label: "Hook",
+    body: "On December 20th, 2025, San Francisco’s power outage shut off traffic and street lights, causing the city’s Waymo’s to stall more than 1,500 times in one night; the normal daily rate was reported by SF officials at 4, making this abnormal Saturday night 375 times worse. Autonomous vehicles struggle when they are put in unfamiliar and rare situations they haven’t been trained on, in this case, a city without traffic lights. The biggest gap between modern deprecated autonomy and full autonomy is the ability for a model, like a self-driving model, to be able to make logical decisions even in situations it hasn’t been trained on.",
+  },
+  {
     label: "Outcome",
     body: "ADUA developed two main methods to address autonomy in unknown domains. Firstly, a bi-model consensus that used a low-confidence threshold alongside open-world model detectors to recognise unknown objects. Secondly, an original use of colour blocks and frame-palette tracking to check unknown objects cheaply, without a heavy meta-learning model. Together these resulted in a 93%-accurate pipeline.",
   },
