@@ -36,7 +36,7 @@ export default function ContactForm() {
     // phones the ratio is dropped and the card grows to its content —
     // a card that keeps its proportions at 320px wide is unusable, and a
     // legible form beats a faithful one.
-    <div className="mx-auto mt-10 w-full max-w-[680px] border border-black/15 bg-white p-7 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.18)] sm:aspect-[3.5/2] sm:p-8">
+    <div className="card-grain relative mx-auto mt-10 w-full max-w-[680px] border border-black/15 bg-white p-7 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.18)] sm:aspect-[3.5/2] sm:p-8">
       <form onSubmit={onSubmit} className="flex h-full flex-col">
         {/* The house mark in the corner, as it would be printed on the
             card. The heavy fill solidifies the nodes so it holds its weight

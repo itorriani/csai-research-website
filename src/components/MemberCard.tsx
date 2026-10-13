@@ -27,7 +27,7 @@ function TallCaps({ name }: { name: string }) {
 }
 
 const FACE =
-  "absolute inset-0 flex flex-col items-center justify-center border border-black bg-white px-5 text-black backface-hidden shadow-[0_6px_14px_-8px_rgba(0,0,0,0.55)]";
+  "card-grain absolute inset-0 flex flex-col items-center justify-center border border-black bg-white px-5 text-black backface-hidden shadow-[0_6px_14px_-8px_rgba(0,0,0,0.55)]";
 
 // A member, set on a calling card run longer than it is tall. The name is
 // the face; the house lockup is printed on the reverse. Clicking turns the

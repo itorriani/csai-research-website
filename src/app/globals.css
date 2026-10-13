@@ -116,6 +116,32 @@ body {
   -webkit-text-stroke: 0.7px currentColor;
 }
 
+/* Laid paper. A tile of fractal noise at an opacity low enough that it
+   never reads as a texture in its own right — it only stops the card
+   surface from being flat screen white, the way a printed stock is not.
+   The SVG is a data URI rather than a request, and it sits in a
+   pseudo-element so nothing on the card inherits it; pointer-events are
+   off so the grain never intercepts a click on the card beneath.
+
+   The class deliberately sets no `position` of its own: this file is
+   unlayered, so any rule here would beat Tailwind's own positioning
+   utility whatever its specificity, and collapse an absolutely placed
+   flip face. Each card carries its own `relative` or `absolute`. */
+.card-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-contrast: more) {
+  .card-grain::after {
+    display: none;
+  }
+}
+
 /* Page entrance. Opacity only, and short — a page that slides or scales on
    every navigation reads as a transition rather than as a document opening.
    `backwards` holds the opening frame so there is no flash of full-opacity
