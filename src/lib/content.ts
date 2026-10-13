@@ -148,8 +148,7 @@ export const projects: Project[] = [
   {
     id: "eeg",
     name: "MIND THE NOISE",
-    summary:
-      "Artifact detection and clean-data retention in Muse 2 EEG",
+    summary: "Artifact detection and clean-data retention in Muse 2 EEG",
     pi: "Zach Goldwyn",
     lab: "Neural Signals Group",
     location: "Cal Poly, San Luis Obispo, California",
@@ -222,7 +221,7 @@ export const mindTheNoisePapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "Establishes that the Muse headset can filter noise events and recover usable artifacts \u2014 the foundational assumption of this project, since the Muse 2 is the only device it collects with. That a peer-reviewed paper vindicates one of the cheapest EEG rigs available is what lets the rest of the work be taken seriously.",
+      "Presents an automated pipeline for removing artifacts from EEG recorded on the Muse, a consumer headset with four dry electrodes. Reports that noise events can be filtered and usable signal recovered from hardware costing a fraction of a clinical rig, and evaluates the cleaned output against standard measures.",
   },
   {
     slug: "wearable-eeg-signal-quality",
@@ -233,7 +232,7 @@ export const mindTheNoisePapers: Paper[] = [
     width: 908,
     height: 1210,
     blurb:
-      "Read before the Delorme paper. It establishes the problem rather than the solution: wearable headsets produce far noisier data than clinical collection, and the methods for handling that noise are largely undeveloped. The causes it names \u2014 uncontrolled environments, subjects in motion \u2014 are exactly the conditions this project has to work in.",
+      "Compares two ways of scoring the quality of EEG recorded on wearable devices: a pragmatic rule-based approach and a regression model. Finds wearable recordings substantially noisier than clinical ones, attributes the gap to uncontrolled environments and subject motion, and reports that quality-assessment methods for such data remain underdeveloped.",
   },
   {
     slug: "artifact-detection-systematic-review",
@@ -244,7 +243,7 @@ export const mindTheNoisePapers: Paper[] = [
     width: 910,
     height: 1287,
     blurb:
-      "A systematic review of artifact-detection and artifact-category techniques for EEG from wearable devices. It supplies the taxonomy the other two papers are read against, surveying which detection families exist and where each has been shown to hold up.",
+      "Surveys published techniques for detecting artifacts in EEG from wearable devices and for identifying which category each artifact belongs to. Groups the methods into families, sets out a taxonomy spanning ocular, muscular, cardiac and motion artifacts, and compares the evidence reported for each approach.",
   },
 ];
 
@@ -385,13 +384,14 @@ export const canarySections: {
 export const canaryPapers: Paper[] = [
   {
     slug: "wasp-web-agent-security",
-    title: "WASP: Benchmarking Web Agent Security Against Prompt Injection Attacks",
+    title:
+      "WASP: Benchmarking Web Agent Security Against Prompt Injection Attacks",
     authors: "Evtimov, Zharmagambetov, Guo, et al.",
     venue: "NeurIPS Datasets & Benchmarks, 2025",
     width: 935,
     height: 1210,
     blurb:
-      "An end-to-end benchmark for web agents, rather than the single-step, over-simplified scenarios earlier tests relied on. It finds that even top-tier models with advanced reasoning are deceived by simple, low-effort, human-written injections. The sharper result is the split it exposes: attacks partially succeed in up to 86% of cases, yet agents often fail to carry the attacker\u2019s goal all the way through \u2014 security by incompetence rather than by design.",
+      "Introduces a benchmark that measures how web agents behave under prompt injection across complete tasks rather than single steps. Finds that leading models with advanced reasoning are deceived by simple, low-effort, human-written injections, with attacks partially succeeding in up to 86% of cases. Separates partial success from full success, noting that agents frequently fail to carry the attacker’s goal through to completion.",
   },
   {
     slug: "prompt-injection-threat-landscape",
@@ -402,7 +402,7 @@ export const canaryPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "A survey of 78 papers collected through October 2025, organised into a taxonomy of attacks and defenses. Useful to this project as a map of what has already been tried: optimisation-based attacks that are stealthy but query-hungry or reliant on white-box access, detection defenses that work but add a second model\u2019s worth of overhead, and isolation approaches that separate control from data.",
+      "Reviews 78 papers published through October 2025 and organises them into a taxonomy of prompt injection attacks and defenses against LLM agents. Covers optimisation-based attacks, which are stealthy but require many queries or white-box access; detection defenses, which add the overhead of a second model; and isolation approaches that separate control instructions from data.",
   },
   {
     slug: "evaluating-ipi-defenses",
@@ -413,7 +413,7 @@ export const canaryPapers: Paper[] = [
     width: 910,
     height: 1287,
     blurb:
-      "Four defenses and an undefended control, measured across three models on the AgentDojo banking benchmark. It is the closest published analogue to what CANARY sets out to build: it reports attack success rate alongside benign utility and utility under attack, so a defense that blocks injections by crippling the agent cannot look like a win.",
+      "Evaluates four indirect prompt injection defenses against an undefended control across three models on the AgentDojo banking benchmark. Reports attack success rate alongside benign utility and utility under attack, so that defenses which suppress injections by degrading the agent are distinguishable from those that do not. Includes a replication of prior reported results.",
   },
 ];
 
@@ -492,7 +492,7 @@ export const socialSimulationPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "Ten industry teams applying GenderMag, a walkthrough method that evaluates software through several cognitive styles rather than one. Teams found inclusivity issues in over half the interactions they examined, and in a companion lab study more than 90% of issues surfaced this way were confirmed against independent empirical data \u2014 the empirical ground for simulating diverse testers at all.",
+      "Reports ten industry teams applying GenderMag, a cognitive walkthrough method that evaluates software through several problem-solving styles rather than one. The teams identified inclusivity issues in over half the interactions they examined, and a companion lab study confirmed more than 90% of the issues surfaced this way against independent empirical data.",
   },
   {
     slug: "generative-agents-simulacra",
@@ -502,7 +502,7 @@ export const socialSimulationPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "The paper that made believable simulated people tractable: agents with memory, reflection and planning, left to run in a small sandboxed town. It is the architectural precedent for Social Simulation \u2014 the demonstration that persona behaviour can be generated rather than scripted.",
+      "Introduces agents that store experience in a memory stream, periodically reflect on it to form higher-level inferences, and plan ahead, then runs twenty-five of them in a sandboxed town. Shows that believable individual and emergent social behaviour can be generated rather than scripted, and ablates memory, reflection and planning to measure what each contributes.",
   },
   {
     slug: "generative-agents-1000-people",
@@ -513,7 +513,7 @@ export const socialSimulationPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "Agents grounded in interview transcripts from real individuals rather than written prompts, then tested on whether they reproduce those people\u2019s survey and behavioural responses. Directly relevant to this project\u2019s bet that grounding a persona in a real person outperforms describing one in text.",
+      "Builds agents from two-hour interview transcripts with 1,052 real individuals, then tests whether each agent reproduces its subject’s answers on the General Social Survey, Big Five personality measures, and economic games. Reports that interview-grounded agents predict those responses more accurately than agents given demographic descriptions alone.",
   },
 ];
 
@@ -587,7 +587,7 @@ export const aduaPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "Defines the open-world problem this project is built on: a detector must identify objects it was never trained on, label them unknown rather than forcing them into a known class, and then learn them incrementally once labels arrive. It is the formulation behind the open-set half of the bi-model consensus.",
+      "Formalises open world object detection, in which a detector must label objects it was never trained on as unknown rather than forcing them into a known class, then learn them incrementally once labels become available. Proposes ORE, a contrastive-clustering approach with an energy-based unknown identifier, and a protocol for evaluating detectors under these conditions.",
   },
   {
     slug: "segment-anything",
@@ -597,7 +597,7 @@ export const aduaPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "The object-agnostic model the first pipeline pairs with an open-set detector: promptable segmentation that will return a mask for essentially anything, with no notion of class. Its cost is also the reason the second method exists — palette tracking was built to approximate this signal without carrying a model this heavy.",
+      "Presents a promptable segmentation model trained on roughly 1.1 billion masks across 11 million images. Given a point, box, or rough mask as a prompt, it returns a segmentation for essentially any object without assigning it a class, and transfers zero-shot to tasks it was not trained for.",
   },
   {
     slug: "anomaly-segmentation-benchmark",
@@ -607,7 +607,7 @@ export const aduaPapers: Paper[] = [
     width: 935,
     height: 1210,
     blurb:
-      "The evaluation side of the problem: how to measure a model finding road obstacles and anomalous objects it has no class for, rather than just how well it labels the classes it knows. It sets the terms any accuracy claim about unknown-object detection has to be read against.",
+      "Introduces two benchmarks for anomaly segmentation in street scenes, one for road obstacles and one for general anomalous objects, with pixel-level labels for things outside the training taxonomy. Defines metrics that score how well a model localises objects it has no class for rather than how well it labels known classes.",
   },
 ];
 
@@ -656,7 +656,7 @@ export const editorialPolicyDocs: PolicyDoc[] = [
     label: "Checklist",
     title: "NeurIPS Paper Checklist Guidelines",
     blurb:
-      "The checklist the NeurIPS panel itself applies: every claim in the abstract matched to evidence in the paper, limitations stated rather than omitted, and the ethical, reproducibility and societal-impact questions answered in writing. CSAI papers are held to the same questions before they are considered finished.",
+      "The checklist NeurIPS requires authors to complete at submission. It asks that every claim in the abstract be matched to evidence in the paper, that limitations be stated rather than omitted, and that questions on ethics, reproducibility and societal impact be answered in writing.",
     href: "https://neurips.cc/public/guides/PaperChecklist",
   },
   {
@@ -664,9 +664,9 @@ export const editorialPolicyDocs: PolicyDoc[] = [
     logoHeight: "h-[3.4cqw]",
     wordmark: "IEEE",
     label: "Structure",
-    title: "Structure Your Paper \u2014 IEEE Author Center",
+    title: "Structure Your Paper, IEEE Author Center",
     blurb:
-      "IEEE\u2019s guidance on how a paper is built: what belongs in the abstract and introduction, how methods and results are separated, and where limitations and further work sit. It is what gives CSAI research its claims-and-limitations shape rather than a loose write-up.",
+      "IEEE guidance on how a technical paper is assembled: what belongs in the abstract and introduction, how methods and results are kept separate, and where limitations and further work are placed.",
     href: "https://conferences.ieeeauthorcenter.ieee.org/write-your-paper/structure-your-paper/",
   },
 ];
