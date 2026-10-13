@@ -78,18 +78,14 @@ export const footerColumns: {
 }[] = [
   {
     heading: "For Authors",
-    links: [
-      { label: "Submission Guidelines" },
-      { label: "Editorial Policies", href: "/editorial-policies" },
-      { label: "Author Resources" },
-    ],
+    links: [{ label: "Editorial Policies", href: "/editorial-policies" }],
   },
   {
     heading: "About",
     links: [
       { label: "Who We Are", href: "/about" },
       { label: "Team", href: "/team" },
-      { label: "Application" },
+      { label: "Application", href: "/application" },
       { label: "Contact Us", href: "/contact" },
     ],
   },

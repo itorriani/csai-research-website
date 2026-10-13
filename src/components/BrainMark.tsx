@@ -48,11 +48,15 @@ export default function BrainMark({
   className = "",
   style,
   title,
+  /** Edge weight. The default is the house stroke; raise it where the mark
+      has to carry more ink than its drawing alone gives it. */
+  strokeWidth = 2.4,
 }: {
   variant?: BrainVariant;
   className?: string;
   style?: React.CSSProperties;
   title?: string;
+  strokeWidth?: number;
 }) {
   const maskId = `brain-holes-${variant}`;
   const isSolid = (id: string) =>
@@ -65,7 +69,7 @@ export default function BrainMark({
       style={style}
       fill="none"
       stroke="currentColor"
-      strokeWidth={2.4}
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       role={title ? "img" : "presentation"}
       aria-label={title}

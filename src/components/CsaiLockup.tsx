@@ -14,6 +14,7 @@ export default function CsaiLockup({
   localeWeight = 900,
   localeSize = 0.42,
   localeTrack = 0.06,
+  strokeWidth,
   className = "",
 }: {
   variant?: BrainVariant;
@@ -29,6 +30,9 @@ export default function CsaiLockup({
   initialScale?: number;
   localeSize?: number;
   localeTrack?: number;
+  /** Edge weight of the marks. Raise it where the lockup is set small and
+      the default stroke thins out to grey. */
+  strokeWidth?: number;
   className?: string;
 }) {
   const words = ["CSAI", "RESEARCH"];
@@ -52,6 +56,7 @@ export default function CsaiLockup({
                 : variant
             }
             className="w-auto"
+            strokeWidth={strokeWidth}
             // The glyph is wider than tall; height drives the size.
             style={{ height: `${marks === 3 ? markSize * 0.62 : markSize}em` }}
           />
