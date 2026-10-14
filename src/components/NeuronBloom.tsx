@@ -7,14 +7,21 @@ import usePrefersReducedMotion from "@/lib/usePrefersReducedMotion";
 // The house mark, drawn rather than placed: the same graph BrainMark renders,
 // animated slowly in the middle of the white hero.
 //
-//   1. The dots arrive one at a time, outward from the centre.
-//   2. Once they are all there, the edges wire them together — one stroke at
-//      a time, each drawn by its own dash offset.
+//   1. The mark grows out of its middle. A line leaves a dot that is already
+//      there, takes its own time to cross, and the dot at its far end comes
+//      into being as the line lands on it — so the wiring is not a second
+//      movement after the dots but the thing that puts them there.
+//   2. Every line out of a dot leaves on its own delay, so the growth forks:
+//      several lines are crossing and several dots blooming at any moment,
+//      in different corners of the mark, rather than one at a time along a
+//      single front. The delays are hashed from the edge, not random, so it
+//      is the same piece on every load and between server and client.
 //   3. The mark settles, slides up, and the season line fades in under it.
 //   4. From then on the dots twinkle: the mark itself never moves, but each
-//      disc drifts between solid and open on its own slow rhythm, so the
-//      balance of filled and hollow nodes keeps changing. Every dot is on a
-//      different period, which is what keeps it from reading as a pulse.
+//      disc blinks between solid and open on its own rhythm — every one of
+//      them at least once every three seconds — so the balance of filled and
+//      hollow nodes keeps changing. Every dot is on a different period, and
+//      no two are in step, which is what keeps it from reading as a pulse.
 //
 // The geometry is imported from BrainMark, not copied, so the piece can never
 // drift from the logo in the nav above it.
@@ -23,79 +30,109 @@ import usePrefersReducedMotion from "@/lib/usePrefersReducedMotion";
 // DOM — React renders the graph once. The slide and the caption are the single
 // exception: they are one state flip and plain CSS transitions, because they
 // happen once and nothing is served by driving them per frame.
+//
+// It is also written to be cheap, because it opens the page and anything it
+// costs is paid while the browser is still laying the page out, loading its
+// fonts and decoding the cover: the loop writes a property only when the
+// value it would write has actually changed, holds no mask over anything it
+// animates, and does not begin at all until the fonts have landed and the
+// first frames are the browser's own again.
 
 const SEED = "h"; // the big node at the middle of the mark
 
 /* ---------------------------------------------------------------- geometry */
 
-const adjacency = new Map<string, string[]>(NODES.map((n) => [n.id, []]));
-for (const [a, b] of EDGES) {
-  adjacency.get(a)!.push(b);
-  adjacency.get(b)!.push(a);
-}
-
-// Breadth-first from the centre. Both movements use this order, so the dots
-// arrive outward and the wiring then follows the same path back out.
-const depth = new Map<string, number>([[SEED, 0]]);
-const ORDER: string[] = [SEED];
-for (let i = 0; i < ORDER.length; i++) {
-  for (const m of adjacency.get(ORDER[i])!) {
-    if (depth.has(m)) continue;
-    depth.set(m, depth.get(ORDER[i])! + 1);
-    ORDER.push(m);
-  }
-}
-const RANK = new Map(ORDER.map((id, i) => [id, i]));
-
-/* ---------------------------------------------------------------- timeline */
-
-const DOT_STAGGER = 260; // between one dot and the next
-const DOT_POP = 720;
-const DOTS_END = (NODES.length - 1) * DOT_STAGGER + DOT_POP;
-
-const WIRE_AT = DOTS_END + 800; // a beat with the dots alone
-const WIRE_STAGGER = 190;
-const WIRE_BASE = 500;
-const WIRE_PER_UNIT = 11; // ms per unit of length — every edge draws at one speed
-
-type Wire = { d: string; len: number; start: number; end: number };
-
-// Wire outward too: an edge is ready as soon as the node nearer the centre is.
-const WIRES: Wire[] = EDGES.map(([a, b]) => {
-  const [from, to] = RANK.get(a)! <= RANK.get(b)! ? [a, b] : [b, a];
-  const p = byId.get(from)!;
-  const q = byId.get(to)!;
-  return {
-    d: `M${p.x} ${p.y}L${q.x} ${q.y}`,
-    len: Math.hypot(q.x - p.x, q.y - p.y),
-    to,
-  };
-})
-  .sort((x, y) => RANK.get(x.to)! - RANK.get(y.to)!)
-  .map((w, i) => {
-    const start = WIRE_AT + i * WIRE_STAGGER;
-    return {
-      d: w.d,
-      len: w.len,
-      start,
-      end: start + WIRE_BASE + w.len * WIRE_PER_UNIT,
-    };
-  });
-
-const WIRE_END = Math.max(...WIRES.map((w) => w.end));
-const REVEAL_AT = WIRE_END + 550; // the mark lifts and the season line arrives
-const TWINKLE_AT = REVEAL_AT + 1200;
-const TWINKLE_RAMP = 3000; // one dot's hand-off from its fixed fill to its wave
-const TWINKLE_SPACING = 1500; // and the gap between one dot's hand-off and the next
-
-/* ---------------------------------------------------------------- twinkling */
-
-// Per-dot rhythm, from a fixed hash of the index rather than Math.random, so
+// Per-edge and per-dot rhythm, from a fixed hash rather than Math.random, so
 // the piece is identical on every load and between server and client.
 const frac = (v: number) => {
   const x = Math.sin(v) * 43758.5453;
   return x - Math.floor(x);
 };
+
+const adjacency = new Map<string, { to: string; edge: number; len: number }[]>(
+  NODES.map((n) => [n.id, []]),
+);
+EDGES.forEach(([a, b], i) => {
+  const p = byId.get(a)!;
+  const q = byId.get(b)!;
+  const len = Math.hypot(q.x - p.x, q.y - p.y);
+  adjacency.get(a)!.push({ to: b, edge: i, len });
+  adjacency.get(b)!.push({ to: a, edge: i, len });
+});
+
+/* ---------------------------------------------------------------- timeline */
+
+const DRAW_BASE = 190;
+const DRAW_PER_UNIT = 5; // ms per unit of length — every edge draws at one speed
+// How far along a line is when the dot at its far end blooms. Under 1, so the
+// dot is already there to be arrived at rather than appearing after a pause.
+const LAND = 0.7;
+// What makes the growth fork instead of marching: each line sits on its own
+// delay before leaving, so sibling branches out of the same dot set off at
+// noticeably different moments and the mark fills in from several places.
+const LAUNCH_SPREAD = 260;
+const DOT_POP = 380;
+
+const draw = (len: number) => DRAW_BASE + len * DRAW_PER_UNIT;
+const launch = (edge: number) => frac(edge * 24.7 + 2.3) * LAUNCH_SPREAD;
+
+// When each dot comes into being: the earliest any line can reach it. Shortest
+// paths from the seed, with an edge costing its own delay plus the part of its
+// crossing that happens before the far dot blooms. Thirteen nodes, so the
+// plain quadratic scan is the whole of it.
+const ARRIVE = new Map<string, number>([[SEED, 0]]);
+{
+  const settled = new Set<string>();
+  for (;;) {
+    let cur: string | null = null;
+    for (const [id, t] of ARRIVE) {
+      if (!settled.has(id) && (cur === null || t < ARRIVE.get(cur)!)) cur = id;
+    }
+    if (cur === null) break;
+    settled.add(cur);
+    for (const e of adjacency.get(cur)!) {
+      const t = ARRIVE.get(cur)! + launch(e.edge) + draw(e.len) * LAND;
+      if (!ARRIVE.has(e.to) || t < ARRIVE.get(e.to)!) ARRIVE.set(e.to, t);
+    }
+  }
+}
+
+type Wire = { d: string; len: number; start: number; end: number };
+
+const WIRES: Wire[] = EDGES.map(([a, b]) => {
+  const p = byId.get(a)!;
+  const q = byId.get(b)!;
+  const len = Math.hypot(q.x - p.x, q.y - p.y);
+  const dur = draw(len);
+
+  // Drawn from whichever end is there first, and timed to land as the other
+  // end blooms. One rule covers both kinds of edge: the ones that put a new
+  // dot on the mark land exactly on it, and the ones that close a loop back
+  // into a dot some other line already reached simply wait for it, which is
+  // why the start is held at the earlier end rather than running before it.
+  const ta = ARRIVE.get(a)!;
+  const tb = ARRIVE.get(b)!;
+  const [from, to] = ta <= tb ? [p, q] : [q, p];
+  const start = Math.max(Math.min(ta, tb), Math.max(ta, tb) - dur * LAND);
+
+  return {
+    d: `M${from.x} ${from.y}L${to.x} ${to.y}`,
+    len,
+    start,
+    end: start + dur,
+  };
+});
+
+const DRAWN = Math.max(
+  ...WIRES.map((w) => w.end),
+  ...[...ARRIVE.values()].map((t) => t + DOT_POP),
+);
+const REVEAL_AT = DRAWN + 350; // the mark lifts and the season line arrives
+const TWINKLE_AT = REVEAL_AT + 600;
+const TWINKLE_RAMP = 900; // one dot's hand-off from its fixed fill to its wave
+const TWINKLE_SPACING = 140; // and the gap between one dot's hand-off and the next
+
+/* ---------------------------------------------------------------- twinkling */
 
 // Which dot starts twinkling when. Sorted by a hash rather than by index so
 // the onsets jump around the mark instead of sweeping across it.
@@ -107,13 +144,16 @@ const TWINKLE = NODES.map((_, i) => {
   const a = frac(i * 12.9898 + 4.1);
   const b = frac(i * 78.233 + 1.7);
   return {
-    // Very long, and all different: a dot turns over twice a period, so at
-    // these lengths the thirteen of them produce about one soft change a
-    // second across the whole mark — a drift rather than an event.
-    period: 22000 + a * 20000, // 22s to 42s
+    // Short, and all different: a dot fades up and back down once a period,
+    // and the thirteen of them together read as a field of breathing cells.
+    // The ceiling is set so that even with the phase drift below — which can
+    // stretch a cycle by about a tenth — the slowest disc on the mark still
+    // comes round every 3s. Most of a cycle is spent in the fade rather than
+    // at either end, so this is as long a fade as that ceiling allows.
+    period: 2000 + a * 750, // 2s to 2.75s
     phase: b * Math.PI * 2,
     // Nothing starts at once. Each disc leaves its fixed fill on its own
-    // schedule, a second and a half after the one before it.
+    // schedule, a third of a second after the one before it.
     onset: TWINKLE_AT + ONSET_ORDER.indexOf(i) * TWINKLE_SPACING,
   };
 });
@@ -127,7 +167,7 @@ const TAU = Math.PI * 2;
 // distribution intact.
 function wave(t: number, i: number) {
   const { period, phase } = TWINKLE[i];
-  const drift = 0.4 * Math.sin((TAU * t) / (period * 2.7) + phase);
+  const drift = 0.25 * Math.sin((TAU * t) / (period * 2.7) + phase);
   return 0.5 + 0.5 * Math.sin((TAU * t) / period + phase + drift);
 }
 
@@ -140,13 +180,15 @@ const easeInOutCubic = (p: number) =>
   p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
 const easeOutBack = (p: number) => 1 + 1.9 * (p - 1) ** 3 + 1.1 * (p - 1) ** 2;
 
-// The wave only decides on or off; this is the narrow band it crosses in
-// between, about a second and a half of soft fade at these periods. The
-// threshold sits well above the middle on purpose: it holds roughly five of
-// the thirteen discs solid at any moment, which is the balance the static
-// mark is drawn with.
+// The wave only decides how far up or down; this is the band it crosses in
+// between, about a third of a second of fade each way at these periods, so
+// a disc visibly swells to solid and ebbs back rather than switching. It is
+// wide enough that the fade is most of the journey and a dot only rests at
+// full ink briefly at the top. The band is centred above the middle on
+// purpose: it holds roughly five of the thirteen discs solid at any moment,
+// which is the balance the static mark is drawn with.
 const gate = (v: number) => {
-  const p = clamp01((v - 0.59) / 0.14);
+  const p = clamp01((v - 0.38) / 0.56);
   return p * p * (3 - 2 * p);
 };
 
@@ -157,8 +199,15 @@ const SLIDE = "cubic-bezier(0.22, 1, 0.36, 1)";
 export default function NeuronBloom({
   className = "",
   caption = true,
+  tone = "light",
 }: {
   className?: string;
+  // Which band the mark is standing on, named the way HeroNav names it:
+  // "light" is the white page and draws the mark in ink, "dark" is a black
+  // bar and draws it in paper. The open discs have to follow — they are
+  // holes punched in the strokes, so the field has to be whatever is
+  // actually behind the mark or they read as white dots on black.
+  tone?: "light" | "dark";
   // The season line is part of the piece, but where the page sets its own
   // date beside the mark it would be said twice. Dropping it also drops the
   // lift, which only existed to make room for it.
@@ -176,7 +225,6 @@ export default function NeuronBloom({
   // reports nothing the draw never starts and the mark sits on its first
   // dot forever.
   const hostRef = useRef<HTMLDivElement>(null);
-  const rootRef = useRef<SVGGElement>(null);
   const wireRefs = useRef<(SVGPathElement | null)[]>([]);
   const dotRefs = useRef<(SVGGElement | null)[]>([]);
   const fillRefs = useRef<(SVGCircleElement | null)[]>([]);
@@ -213,26 +261,33 @@ export default function NeuronBloom({
     let running = false;
     let lift = 0;
 
+    // What was last written to each element. Assigning a style property the
+    // browser already holds still costs a style invalidation, and most of
+    // these are unchanged on most frames — the wires once they are drawn,
+    // and every disc sitting at full ink or none between its fades.
+    const wroteWire = new Float32Array(WIRES.length).fill(-1);
+    const wroteFill = new Float32Array(NODES.length).fill(-1);
+
     const frame = (now: number) => {
       if (!origin) origin = now;
       const t = now - origin; // runs on, no loop: it draws once and then breathes
 
       for (let i = 0; i < WIRES.length; i++) {
+        if (wroteWire[i] === 0) continue; // drawn, and it stays drawn
         const el = wires[i];
         if (!el) continue;
         const w = WIRES[i];
-        if (t > w.end + 60) {
-          el.style.strokeDashoffset = "0";
-          continue;
-        }
         // One dash the length of the stroke: the offset is the drawing.
         const p = easeInOutCubic(seg(t, w.start, w.end));
-        el.style.strokeDashoffset = (w.len * (1 - p)).toFixed(2);
+        const off = t > w.end ? 0 : Math.round(w.len * (1 - p) * 100) / 100;
+        if (off === wroteWire[i]) continue;
+        wroteWire[i] = off;
+        el.style.strokeDashoffset = `${off}`;
       }
 
       for (let i = 0; i < NODES.length; i++) {
         const n = NODES[i];
-        const at = RANK.get(n.id)! * DOT_STAGGER;
+        const at = ARRIVE.get(n.id)!;
         const p = seg(t, at, at + DOT_POP);
 
         const el = dots[i];
@@ -255,11 +310,17 @@ export default function NeuronBloom({
         const mixIn = easeInOutCubic(
           seg(t, TWINKLE[i].onset, TWINKLE[i].onset + TWINKLE_RAMP),
         );
-        const value = base * (1 - mixIn) + gate(wave(t, i)) * mixIn;
-        fill.style.opacity = value.toFixed(3);
+        const value =
+          Math.round((base * (1 - mixIn) + gate(wave(t, i)) * mixIn) * 1000) /
+          1000;
+        if (value === wroteFill[i]) continue;
+        wroteFill[i] = value;
+        fill.style.opacity = `${value}`;
       }
 
-      if (!lift && t >= REVEAL_AT) {
+      // Without a caption there is nothing to lift for, and the re-render
+      // would land in the middle of the twinkle for no visible gain.
+      if (!lift && caption && t >= REVEAL_AT) {
         lift = t;
         setLifted(true);
       }
@@ -267,8 +328,18 @@ export default function NeuronBloom({
       raf = requestAnimationFrame(frame);
     };
 
+    // Two gates, and the loop runs only with both open: the mark has to be
+    // on screen, and the page has to be past its own opening. This piece is
+    // the first thing on the site, so it would otherwise start drawing into
+    // the middle of the browser's busiest moment — fonts swapping, the cover
+    // decoding — and lose frames out of the arrival, which is the one part
+    // of it that cannot afford them.
+    let onScreen = false;
+    let settled = false;
+    let dropped = false;
+
     const start = () => {
-      if (running) return;
+      if (running || !onScreen || !settled) return;
       running = true;
       raf = requestAnimationFrame(frame);
     };
@@ -277,149 +348,175 @@ export default function NeuronBloom({
       cancelAnimationFrame(raf);
     };
 
+    // One frame after the fonts land, so the clock does not start on the
+    // frame that re-laid the page out around them — and never later than a
+    // second and a half, so a font that is slow to arrive cannot hold the
+    // opening of the page hostage.
+    const settle = () => {
+      if (settled || dropped) return;
+      window.clearTimeout(latest);
+      requestAnimationFrame(() => {
+        if (dropped) return;
+        settled = true;
+        start();
+      });
+    };
+    const latest = window.setTimeout(settle, 1500);
+    if (document.fonts) document.fonts.ready.then(settle, settle);
+    else settle();
+
     // Offscreen it is just work the compositor doesn't need to do. The clock
     // is not reset on the way back: once the mark has been drawn, returning to
     // it should find it drawn, not replaying.
     const observer = new IntersectionObserver(
-      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        if (onScreen) start();
+        else stop();
+      },
       { threshold: 0.01 },
     );
     observer.observe(host);
 
     return () => {
+      dropped = true;
+      window.clearTimeout(latest);
       observer.disconnect();
       stop();
     };
-  }, [reduced]);
+  }, [reduced, caption]);
 
   return (
     <div
       ref={hostRef}
       className={`relative flex flex-col items-center ${className}`}
     >
-      <svg
-        viewBox="-8 -8 117 98"
+      {/* The lift that makes room for the season line. Half the caption's
+          height, so the pair ends up optically centred where the mark alone
+          had been. It is taken on a plain div around the svg rather than on
+          the svg itself: a transform on an element the loop is also writing
+          into makes the browser re-rasterise the whole mark on every frame
+          of the slide, and the slide lands exactly where the dots are taking
+          up their own rhythm. */}
+      <div
         className="w-full"
-        role="img"
-        aria-label="The CSAI mark drawing itself: the nodes arrive and connect"
-        shapeRendering="geometricPrecision"
-        style={
-          {
-            "--nb-ink": "#1a1a2e",
-            "--nb-field": "#ffffff",
-            overflow: "visible",
-            // The lift that makes room for the season line. Half the caption's
-            // height, so the pair ends up optically centred where the mark
-            // alone had been.
-            transform:
-              revealed && caption ? "translateY(-22px)" : "translateY(0)",
-            transition: reduced ? undefined : `transform 1700ms ${SLIDE}`,
-          } as React.CSSProperties
-        }
+        style={{
+          transform:
+            revealed && caption ? "translateY(-22px)" : "translateY(0)",
+          transition: reduced ? undefined : `transform 1700ms ${SLIDE}`,
+        }}
       >
-        <defs>
-          {/* Same trick the static mark uses: every edge is punched out at
-              every node, so an open disc is a real hole and the strokes never
-              show through it. */}
-          <mask id="nb-holes">
-            <rect x="-8" y="-8" width="117" height="98" fill="white" />
-            {NODES.map((n) => (
-              <circle key={n.id} cx={n.x} cy={n.y} r={n.r} fill="black" />
-            ))}
-          </mask>
-        </defs>
-
-        <g ref={rootRef}>
-          <g
-            mask="url(#nb-holes)"
-            fill="none"
-            stroke="var(--nb-ink)"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-          >
-            {WIRES.map((w, i) => (
-              <path
-                key={i}
-                ref={(el) => {
-                  wireRefs.current[i] = el;
-                }}
-                d={w.d}
-                style={{
-                  strokeDasharray: `${w.len.toFixed(2)} ${w.len.toFixed(2)}`,
-                  strokeDashoffset: w.len.toFixed(2),
-                }}
-              />
-            ))}
-          </g>
-
-          {NODES.map((n, i) => (
+        <svg
+          viewBox="-8 -8 117 98"
+          className="block w-full"
+          role="img"
+          aria-label="The CSAI mark drawing itself: the nodes arrive and connect"
+          shapeRendering="geometricPrecision"
+          style={
+            {
+              "--nb-ink": tone === "dark" ? "#ffffff" : "#1a1a2e",
+              "--nb-field": tone === "dark" ? "#050509" : "#ffffff",
+              overflow: "visible",
+            } as React.CSSProperties
+          }
+        >
+          {/* The static mark punches every edge out at every node with a mask,
+            so an open disc is a real hole. Here the discs are drawn after the
+            edges and filled with the field, which covers the strokes just as
+            well — and costs nothing, where a mask over the one group the loop
+            is animating would have the browser re-compositing it every frame
+            of the wiring. */}
+          <g>
             <g
-              key={n.id}
-              ref={(el) => {
-                dotRefs.current[i] = el;
-              }}
-              style={{
-                opacity: 0,
-                transformOrigin: `${n.x}px ${n.y}px`,
-              }}
+              fill="none"
+              stroke="var(--nb-ink)"
+              strokeWidth="1.7"
+              strokeLinecap="round"
             >
-              <circle
-                cx={n.x}
-                cy={n.y}
-                r={n.r}
-                fill="var(--nb-field)"
-                stroke="var(--nb-ink)"
-                strokeWidth="1.7"
-              />
-              {/* The ink that turns a hollow disc solid. Fading this rather
+              {WIRES.map((w, i) => (
+                <path
+                  key={i}
+                  ref={(el) => {
+                    wireRefs.current[i] = el;
+                  }}
+                  d={w.d}
+                  style={{
+                    strokeDasharray: `${w.len.toFixed(2)} ${w.len.toFixed(2)}`,
+                    strokeDashoffset: w.len.toFixed(2),
+                  }}
+                />
+              ))}
+            </g>
+
+            {NODES.map((n, i) => (
+              <g
+                key={n.id}
+                ref={(el) => {
+                  dotRefs.current[i] = el;
+                }}
+                style={{
+                  opacity: 0,
+                  transformOrigin: `${n.x}px ${n.y}px`,
+                }}
+              >
+                <circle
+                  cx={n.x}
+                  cy={n.y}
+                  r={n.r}
+                  fill="var(--nb-field)"
+                  stroke="var(--nb-ink)"
+                  strokeWidth="1.7"
+                />
+                {/* The ink that turns a hollow disc solid. Fading this rather
                   than swapping the fill attribute is what makes a dot come on
                   like a star instead of flicking like a switch. */}
-              <circle
-                ref={(el) => {
-                  fillRefs.current[i] = el;
-                }}
-                cx={n.x}
-                cy={n.y}
-                r={n.r}
-                fill="var(--nb-ink)"
-                style={{ opacity: SOLID_LIGHT.has(n.id) ? 1 : 0 }}
-              />
-            </g>
-          ))}
-        </g>
-      </svg>
+                <circle
+                  ref={(el) => {
+                    fillRefs.current[i] = el;
+                  }}
+                  cx={n.x}
+                  cy={n.y}
+                  r={n.r}
+                  fill="var(--nb-ink)"
+                  style={{ opacity: SOLID_LIGHT.has(n.id) ? 1 : 0 }}
+                />
+              </g>
+            ))}
+          </g>
+        </svg>
+      </div>
 
       {/* Sits outside the flow so the mark is centred on its own until the
           line arrives — otherwise the space is reserved from the start and
           there is nothing to slide up out of. */}
       {caption && (
-      <span
-        className="font-naval pointer-events-none absolute top-full mt-1 flex items-baseline whitespace-nowrap uppercase leading-none text-ink"
-        style={{
-          fontSize: "30px",
-          fontWeight: 900,
-          letterSpacing: "0.07em",
-          marginRight: "-0.07em",
-          opacity: revealed ? 1 : 0,
-          transform: revealed ? "translateY(0)" : "translateY(12px)",
-          transition: reduced
-            ? undefined
-            : `opacity 2400ms ease-out, transform 2400ms ${SLIDE}`,
-        }}
-      >
-        Fall Winter&nbsp;
-        {/* Naval only ships oldstyle figures, which sit at x-height and read
+        <span
+          className="font-naval pointer-events-none absolute top-full mt-1 flex items-baseline whitespace-nowrap uppercase leading-none text-ink"
+          style={{
+            fontSize: "30px",
+            fontWeight: 900,
+            letterSpacing: "0.07em",
+            marginRight: "-0.07em",
+            opacity: revealed ? 1 : 0,
+            transform: revealed ? "translateY(0)" : "translateY(12px)",
+            transition: reduced
+              ? undefined
+              : `opacity 2400ms ease-out, transform 2400ms ${SLIDE}`,
+          }}
+        >
+          Fall Winter&nbsp;
+          {/* Naval only ships oldstyle figures, which sit at x-height and read
             as a different size next to the caps, and the Vera Humana cut is
             drawn oblique — there is no upright in the file, so font-style
             cannot stand it back up. The years go in the Saint Laurent cut,
             which is upright and lining. */}
-        <span
-          className="font-wordmark"
-          style={{ fontStyle: "normal", fontSize: "0.86em" }}
-        >
-          2026-2027
+          <span
+            className="font-wordmark"
+            style={{ fontStyle: "normal", fontSize: "0.86em" }}
+          >
+            2026-2027
+          </span>
         </span>
-      </span>
       )}
     </div>
   );
