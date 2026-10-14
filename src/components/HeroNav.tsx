@@ -19,14 +19,19 @@ function SearchIcon() {
   );
 }
 
+// The family is pinned rather than inherited. The nav is dropped into pages
+// that set a family on the element around it — the project and document
+// sheets are `font-venetian` from <main> down — and the links were picking
+// that up, so the same bar came out in Venetian there and in the body sans
+// on the homepage. The lockup has always named its own faces, so it was
+// only ever the links that moved.
 const LINK =
-  "text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60";
+  "font-sans text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60";
 
-// On a white band the links carry full black and the document's own
-// stroke: Venetian ships a single Regular cut, so at 12px tracked caps the
-// ink has to come from the stroke rather than from a weight that is not
-// there. The lockup is left on the nav's own tone, a shade off black, so
-// the house mark stays the quieter mark of the two.
+// On a white band the links carry full black and the document's own stroke:
+// at 12px tracked caps there is little enough ink that the stroke is what
+// holds them against the white. The lockup is left on the nav's own tone, a
+// shade off black, so the house mark stays the quieter mark of the two.
 const LINK_LIGHT = `${LINK} doc-ink text-black`;
 
 // `tone` only flips the ink: "dark" is the nav over the black pages, "light"
