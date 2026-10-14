@@ -67,7 +67,7 @@ export const heroNavLeft = [
 
 export const heroNavRight = [
   { label: "Team", href: "/team" },
-  { label: "Join", href: "#" },
+  { label: "Policies", href: "/editorial-policies" },
 ];
 
 // A link without an href is still a placeholder; the footer renders it as

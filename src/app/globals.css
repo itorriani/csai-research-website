@@ -200,8 +200,11 @@ body {
 }
 
 .winter-draw path {
-  fill: #ffffff;
-  stroke: #ffffff;
+  /* Taken from the line they stand in rather than named here, so the
+     masthead reverses with whatever it is set on: paper on a dark band,
+     ink on the white page. */
+  fill: currentColor;
+  stroke: currentColor;
   /* 0.013em of the em these outlines were taken at. */
   stroke-width: 13;
   stroke-linecap: round;
@@ -238,7 +241,7 @@ body {
 
 .year-draw path {
   fill: none;
-  stroke: #ffffff;
+  stroke: currentColor;
   /* In user units: 0.04em of the em the outlines were taken at, which is
      the weight the -webkit-text-stroke held, and it scales with the box. */
   stroke-width: 81.92;
@@ -251,6 +254,66 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .year-draw path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* The masthead's frame, drawn rather than set. One line leaves the top-left
+   corner and runs clockwise round the box — a rect is stroked in that order,
+   so the dash offset is the whole of it — and it goes first, before the mark
+   and the date are written inside it: the plate laid, then printed on.
+
+   The shadow is held back until the line closes, because until then there is
+   no edge for it to fall from. */
+@keyframes masthead-frame {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes masthead-lift {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The shadow is a layer of its own that fades in, not a box-shadow that is
+   animated from nothing: animating the shadow itself repaints the box on
+   every frame of it, and this one arrives while the mark inside is still
+   being drawn. As its own element it is composited and costs nothing. */
+.masthead-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  box-shadow: 0 2px 14px rgba(26, 26, 46, 0.1);
+  animation: masthead-lift 700ms ease-out 1500ms both;
+}
+
+.masthead-box rect {
+  fill: none;
+  stroke: currentColor;
+  /* Twice the weight it reads at: the svg clips the half that falls outside
+     the box, and what is left sits flush to the edge. */
+  stroke-width: 3;
+  stroke-dasharray: 1;
+  animation: masthead-frame 1400ms cubic-bezier(0.65, 0, 0.35, 1) 150ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .masthead-box::before {
+    animation: none;
+    opacity: 1;
+  }
+
+  .masthead-box rect {
     animation: none;
     stroke-dashoffset: 0;
   }

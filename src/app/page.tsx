@@ -23,12 +23,14 @@ export default function Home() {
       <header className="flex min-h-[calc(100vh+120px)] flex-col bg-white">
         <HeroNav tone="light" />
 
-        {/* The masthead for the issue: a black bar run across the white
-            above the drawing — held just off the page edges rather than
-            bled to them, so it reads as a band laid on the page rather
-            than as the page changing colour — with everything
-            inside it reversed out — the mark in paper rather than ink, the
-            date and the outlined year in white.
+        {/* The masthead for the issue: the mark and the date in ink inside
+            a ruled box. The box takes its width from what is set inside it
+            rather than running across the page, and it is a line around the
+            lockup rather than a black fill, drawn out of its top-left corner
+            before anything is set inside it — the plate laid first, then
+            printed on. The shadow arrives as the line closes, slight enough
+            to lift the box off the sheet without casting it anywhere, and
+            the white page is left to the drawing below.
             The mark draws itself; the date arrives after it, which is why
             the fade is delayed rather than running with the page.
 
@@ -37,12 +39,25 @@ export default function Home() {
             oldstyle figures, which sit at x-height and read a size down
             beside the caps. */}
         <div className="flex flex-1 items-center">
-          <div className="relative mx-auto w-[82%] bg-[#050509] py-7">
-            <div className="flex -translate-x-[1.5%] items-center justify-center gap-6 px-8">
+          <div className="masthead-box relative mx-auto w-fit bg-white px-[clamp(24px,4vw,56px)] py-7 text-ink">
+            {/* The frame is a stroked rect rather than a border so it can be
+                drawn: one line out of the top-left corner, clockwise round
+                the box. It is laid over the box at its full size — the
+                stroke is twice the weight it reads at and the svg clips the
+                outer half, which keeps the line exactly on the edge at any
+                width the lockup takes. */}
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full"
+              aria-hidden="true"
+            >
+              <rect x="0" y="0" width="100%" height="100%" pathLength={1} />
+            </svg>
+
+            <div className="relative flex items-center justify-center gap-6">
               <NeuronBloom
                 className="w-[min(22vw,104px)]"
                 caption={false}
-                tone="dark"
+                tone="light"
               />
 
               <FadeContent
@@ -50,7 +65,7 @@ export default function Home() {
                 blur={false}
                 delay={700}
                 duration={2600}
-                className="font-naval whitespace-nowrap uppercase leading-none text-white"
+                className="font-naval whitespace-nowrap uppercase leading-none text-ink"
               >
                 <span
                   className="flex items-baseline"
