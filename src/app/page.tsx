@@ -1,5 +1,7 @@
 import Image from "next/image";
 import FadeContent from "@/components/FadeContent";
+import WinterDraw from "@/components/WinterDraw";
+import YearDraw from "@/components/YearDraw";
 import HeroNav from "@/components/HeroNav";
 import NeuronBloom from "@/components/NeuronBloom";
 import SiteFooter from "@/components/SiteFooter";
@@ -21,8 +23,12 @@ export default function Home() {
       <header className="flex min-h-[calc(100vh+120px)] flex-col bg-white">
         <HeroNav tone="light" />
 
-        {/* The masthead for the issue, held in the white above the drawing
-            and ranged to the drawing's own left edge rather than the page's.
+        {/* The masthead for the issue: a black bar run across the white
+            above the drawing — held just off the page edges rather than
+            bled to them, so it reads as a band laid on the page rather
+            than as the page changing colour — with everything
+            inside it reversed out — the mark in paper rather than ink, the
+            date and the outlined year in white.
             The mark draws itself; the date arrives after it, which is why
             the fade is delayed rather than running with the page.
 
@@ -30,47 +36,55 @@ export default function Home() {
             headings below it use, rather than in Naval: Naval ships only
             oldstyle figures, which sit at x-height and read a size down
             beside the caps. */}
-        <div className="flex flex-1 -translate-x-[1.5%] items-center justify-center gap-6 px-8">
-          <NeuronBloom className="w-[min(22vw,104px)]" caption={false} />
+        <div className="flex flex-1 items-center">
+          <div className="relative mx-auto w-[82%] bg-[#050509] py-7">
+            <div className="flex -translate-x-[1.5%] items-center justify-center gap-6 px-8">
+              <NeuronBloom
+                className="w-[min(22vw,104px)]"
+                caption={false}
+                tone="dark"
+              />
 
-          <FadeContent
-            as="span"
-            blur={false}
-            delay={700}
-            duration={2600}
-            className="font-naval whitespace-nowrap uppercase leading-none text-ink"
-          >
-            <span
-              className="flex items-baseline"
-              style={{
-                fontSize: "clamp(22px,3vw,44px)",
-                // Naval's Regular cut, not the Black: at this size the
-                // heavy one sits too close to the nav's lockup above it.
-                fontWeight: 400,
-                letterSpacing: "0.07em",
-                marginRight: "-0.07em",
-              }}
-            >
-              Winter&nbsp;
-              {/* Outlined rather than solid: the fill is dropped and the
-                  letterform is carried by its own stroke, so the year reads
-                  as drawn next to the solid caps instead of competing
-                  with them, and gives the wipe something to lay down. The
-                  stroke is set in em so it tracks the clamp rather than
-                  going spindly on a wide screen. */}
-              <span
-                className="year-draw font-sans font-bold"
-                style={{
-                  fontSize: "0.9em",
-                  letterSpacing: "0.04em",
-                  color: "transparent",
-                  WebkitTextStroke: "0.04em #1a1a2e",
-                }}
+              <FadeContent
+                as="span"
+                blur={false}
+                delay={700}
+                duration={2600}
+                className="font-naval whitespace-nowrap uppercase leading-none text-white"
               >
-                2026
-              </span>
-            </span>
-          </FadeContent>
+                <span
+                  className="flex items-baseline"
+                  style={{
+                    fontSize: "clamp(22px,3vw,44px)",
+                    // Naval's Regular cut, not the Black: at this size the
+                    // heavy one sits too close to the nav's lockup above.
+                    fontWeight: 400,
+                    letterSpacing: "0.07em",
+                    marginRight: "-0.07em",
+                    // Slid in towards the mark. A transform rather than a
+                    // margin, so it closes the gap on the eye without moving
+                    // the pair off the centre the row sets them on.
+                    transform: "translateX(-0.5em)",
+                  }}
+                >
+                  {/* Both halves of the line are drawn rather than typed,
+                      the word first and the year out of its last letter, so
+                      the masthead is written across once instead of two
+                      things animating at each other. The word ends solid and
+                      the year stays an outline, which is the standing of the
+                      two and the reason the year does not compete.
+
+                      The tracking is carried in their geometry now, so the
+                      gap between them is set here rather than falling out of
+                      a space character. */}
+                  <WinterDraw />
+                  <span style={{ fontSize: "0.9em", marginLeft: "0.3em" }}>
+                    <YearDraw />
+                  </span>
+                </span>
+              </FadeContent>
+            </div>
+          </div>
         </div>
 
         {/* The cover drawing. It is pushed to the foot of a screen-high
