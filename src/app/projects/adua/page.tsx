@@ -22,13 +22,25 @@ export default function AduaPage() {
       {/* Set as a document rather than a web page: the house lockup centred
           at the head (it already sits in the nav), a rule under it, and a
           single measure of Venetian running the length of the sheet. */}
-      <main className="font-venetian subpixel-antialiased bg-white text-black">
+      {/* The page tone carries on below the sheet, so the paper ends on a
+          visible edge instead of running into the footer rule. Deeper than
+          the sheet's own `mt-6` at the head — a document wants more room
+          trailing it than leading it, and the shadow needs somewhere to
+          fall. */}
+      <main className="font-venetian subpixel-antialiased bg-[#fefefe] pb-16 text-black sm:pb-20">
         <HeroNav tone="light" />
 
-        <article className="mx-auto w-full max-w-[860px] px-10 pb-32 sm:px-16 sm:pb-40">
+        {/* The sheet. Pure white on the off-white page, so the paper is
+            the lighter of the two surfaces. The two tones sit a single
+            step apart, far too close to carry the edge, so a shadow
+            does it — soft and tight enough that it lifts the sheet without
+            ever reading as a raised UI card. The horizontal padding is the
+            paper margin, not a layout inset: the white carries past the
+            measure on both sides before the page tone resumes. */}
+        <article className="mx-auto mt-6 w-full max-w-[860px] bg-white px-10 pb-32 pt-8 shadow-[0_2px_16px_-10px_rgba(0,0,0,0.18)] sm:px-16 sm:pb-40 sm:pt-10">
           {/* The rule that opens the sheet. Full black and hairline — it
               reads as a ruled page, not as a UI divider. */}
-          <div className="mt-6 border-t border-black" />
+          <div className="border-t border-black" />
 
           {/* Title and lead researcher share a baseline; the name trails to
               the right of the title rather than sitting under it. */}
@@ -40,12 +52,12 @@ export default function AduaPage() {
               <BrainMark className="h-[0.72em] w-auto shrink-0" />
               ADUA
             </h1>
-            <span className="antialiased text-[clamp(1.1rem,1.9vw,1.4rem)] leading-[1.1] text-black/65">
+            <span className="doc-ink text-[clamp(1.1rem,1.9vw,1.4rem)] leading-[1.1] text-black">
               Ivan Torriani
             </span>
           </div>
 
-          <p className="antialiased mt-5 text-[15px] leading-[1.6] text-black/65">
+          <p className="doc-ink mt-5 text-[15px] leading-[1.6] text-black">
             Out-of-distribution autonomous navigation &middot; 2025&ndash;2026
             <br />
             With {aduaTeam.slice(0, -1).join(", ")}, and{" "}
@@ -130,7 +142,7 @@ export default function AduaPage() {
         </article>
       </main>
 
-      <SiteFooter />
+      <SiteFooter surface="bg-[#fefefe]" />
     </>
   );
 }

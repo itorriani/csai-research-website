@@ -43,11 +43,15 @@ export default function ResearchBackdrop() {
       {/* Keeps the white cards reading against the brighter passes. */}
       <div className="absolute inset-0 bg-black/40" />
 
-      {/* Hands off from the white hero above. Multi-stop rather than a
-          two-stop linear so the falloff reads as an ease instead of the
-          flat, slightly banded ramp a straight interpolation gives. It
-          clears before the first heading, which is set in white. */}
-      <div className="absolute inset-x-0 top-0 h-48 bg-[linear-gradient(to_bottom,#ffffff_0%,rgba(255,255,255,0.88)_16%,rgba(255,255,255,0.6)_34%,rgba(255,255,255,0.3)_56%,rgba(255,255,255,0.1)_76%,rgba(255,255,255,0)_100%)] sm:h-64" />
+      {/* Hands off from the hero above. That used to be a white band fading
+          down into the field, because the hero ended in white; it ends in
+          the cover drawing's solid ink now, so the ramp runs the other way —
+          the surface starts at the drawing's own black and the field comes
+          up out of it. White here would draw the line the drawing exists to
+          hide. Multi-stop rather than a two-stop linear so the falloff reads
+          as an ease instead of the flat, slightly banded ramp a straight
+          interpolation gives. */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-[linear-gradient(to_bottom,#050509_0%,rgba(5,5,9,0.88)_18%,rgba(5,5,9,0.6)_38%,rgba(5,5,9,0.3)_60%,rgba(5,5,9,0.1)_80%,rgba(5,5,9,0)_100%)] sm:h-40" />
 
       {/* Settles to flat before the white footer, so that cut is a clean
           line rather than a slice through mid-gradient. */}

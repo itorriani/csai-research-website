@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    // The sheet drops a shade off pure white so the card can be the lighter
-    // of the two surfaces rather than relying on its border alone.
-    <DocumentPage surface="bg-[#f7f7f5]">
+    // The sheet is pure white, as every document sheet is; the card reads
+    // off its own border and shadow rather than off a tone difference.
+    <DocumentPage>
       <ContactForm />
     </DocumentPage>
   );

@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 
 export default function ApplicationPage() {
   return (
-    // Same sheet as the contact page: a shade off pure white, so the card
-    // reads as the lighter of the two surfaces.
-    <DocumentPage surface="bg-[#f7f7f5]">
+    // Same sheet as the contact page: pure white, with the card reading off
+    // its own border and shadow.
+    <DocumentPage>
       {/* The contact card's plate, to the line — 3.5 × 2 inches from sm up,
           growing to its content on phones. */}
       <div className="card-grain relative mx-auto mt-10 w-full max-w-[680px] border border-black/15 bg-white p-7 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.18)] sm:aspect-[3.5/2] sm:p-8">

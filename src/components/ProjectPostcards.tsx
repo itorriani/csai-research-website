@@ -171,7 +171,7 @@ export default function ProjectPostcards({
       id={id}
       aria-labelledby={headingId}
       className={`w-full bg-[#050509] pb-24 sm:pb-32 ${
-        tightTop ? "-mt-16 pt-0 sm:-mt-24" : "pt-24 sm:pt-32"
+        tightTop ? "-mt-16 pt-0 sm:-mt-24" : "pt-10 sm:pt-14"
       }`}
     >
       <div className="mx-auto w-full max-w-[1200px] px-5">

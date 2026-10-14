@@ -7,9 +7,9 @@
 // nothing shows through it — which lets the mark sit over the hero video
 // without needing an opaque backing colour.
 
-type Node = { id: string; x: number; y: number; r: number };
+export type Node = { id: string; x: number; y: number; r: number };
 
-const NODES: Node[] = [
+export const NODES: Node[] = [
   { id: "a", x: 56.4, y: 3.0, r: 3.6 },
   { id: "b", x: 21.4, y: 13.0, r: 5.4 },
   { id: "c", x: 42.7, y: 18.7, r: 5.0 },
@@ -25,7 +25,7 @@ const NODES: Node[] = [
   { id: "m", x: 73.7, y: 75.3, r: 5.4 },
 ];
 
-const EDGES: [string, string][] = [
+export const EDGES: [string, string][] = [
   ["b", "a"], ["a", "e"], ["a", "c"],
   ["b", "f"], ["b", "g"], ["g", "c"],
   ["c", "d"], ["d", "e"], ["f", "g"],
@@ -37,9 +37,9 @@ const EDGES: [string, string][] = [
 ];
 
 // Which nodes are solid discs. The two variants are complements of each other.
-const SOLID_LIGHT = new Set(["a", "e", "g", "j", "l"]);
+export const SOLID_LIGHT = new Set(["a", "e", "g", "j", "l"]);
 
-const byId = new Map(NODES.map((n) => [n.id, n]));
+export const byId = new Map(NODES.map((n) => [n.id, n]));
 
 export type BrainVariant = "light" | "heavy";
 

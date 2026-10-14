@@ -166,3 +166,27 @@ body {
     animation: none;
   }
 }
+
+/* The year on the cover is drawn rather than faded: a wipe from the left
+   across an outlined numeral reads as the stroke being laid down, which is
+   what puts it in the same register as the mark drawing itself beside it.
+   Clip-path rather than a dash offset because the numerals are live text —
+   there is no path to measure. */
+@keyframes year-draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.year-draw {
+  animation: year-draw 2600ms cubic-bezier(0.22, 1, 0.36, 1) 700ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .year-draw {
+    animation: none;
+  }
+}

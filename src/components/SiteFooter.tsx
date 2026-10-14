@@ -1,9 +1,19 @@
 import Image from "next/image";
 import { footerColumns } from "@/lib/content";
 
-export default function SiteFooter() {
+// `surface` is the tone the footer band carries. It defaults to white, the
+// tone of every page that ends on the sheet itself; a page whose sheet is a
+// raised white card passes its own page tone so the band below the card
+// reads as the page continuing rather than as more paper.
+export default function SiteFooter({
+  surface = "bg-white",
+}: {
+  surface?: string;
+} = {}) {
+  // The band opens on a hairline black rule — the same stroke the document
+  // sheets carry, and what parts the footer from the page above it.
   return (
-    <footer className="bg-white">
+    <footer className={`border-t border-black ${surface}`}>
       <div className="mx-auto w-full max-w-[1200px] px-5 py-12">
         <div className="grid gap-10 md:grid-cols-3">
           {footerColumns.map((col) => (

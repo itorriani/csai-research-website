@@ -11,7 +11,6 @@ export default function DocumentPage({
   title,
   byline,
   meta,
-  surface = "bg-white",
   children,
 }: {
   /** Omit on a sheet that carries its own masthead, and the title block —
@@ -21,21 +20,29 @@ export default function DocumentPage({
   byline?: React.ReactNode;
   /** The credit line under the title. */
   meta?: React.ReactNode;
-  /** Tone of the sheet itself. Defaults to pure white; pass a shade off it
-      when the page carries a raised card that has to read as the lighter
-      surface of the two. */
-  surface?: string;
   children: React.ReactNode;
 }) {
   return (
     <>
-      <main className={`font-venetian subpixel-antialiased ${surface} text-black`}>
+      {/* The page tone carries on below the sheet, so the paper ends on a
+          visible edge instead of running into the footer rule. Deeper than
+          the sheet's own `mt-6` at the head — a document wants more room
+          trailing it than leading it, and the shadow needs somewhere to
+          fall. */}
+      <main className="font-venetian subpixel-antialiased bg-[#fefefe] pb-16 text-black sm:pb-20">
         <HeroNav tone="light" />
 
-        <article className="mx-auto w-full max-w-[860px] px-10 pb-32 sm:px-16 sm:pb-40">
+        {/* The sheet. Pure white on the off-white page, so the paper is
+            the lighter of the two surfaces. The two tones sit a single
+            step apart, far too close to carry the edge, so a shadow
+            does it — soft and tight enough that it lifts the sheet without
+            ever reading as a raised UI card. The horizontal padding is the
+            paper margin, not a layout inset: the white carries past the
+            measure on both sides before the page tone resumes. */}
+        <article className="mx-auto mt-6 w-full max-w-[860px] bg-white px-10 pb-32 pt-8 shadow-[0_2px_16px_-10px_rgba(0,0,0,0.18)] sm:px-16 sm:pb-40 sm:pt-10">
           {/* The rule that opens the sheet. Full black and hairline — it
               reads as a ruled page, not as a UI divider. */}
-          <div className="mt-6 border-t border-black" />
+          <div className="border-t border-black" />
 
           {title && (
             <div className="mt-12 flex flex-wrap items-baseline gap-x-5 gap-y-1">
@@ -48,7 +55,7 @@ export default function DocumentPage({
               </h1>
 
               {byline && (
-                <span className="antialiased text-[clamp(1.1rem,1.9vw,1.4rem)] leading-[1.1] text-black/65">
+                <span className="doc-ink text-[clamp(1.1rem,1.9vw,1.4rem)] leading-[1.1] text-black">
                   {byline}
                 </span>
               )}
@@ -56,7 +63,7 @@ export default function DocumentPage({
           )}
 
           {meta && (
-            <p className="antialiased mt-5 text-[15px] leading-[1.6] text-black/65">
+            <p className="doc-ink mt-5 text-[15px] leading-[1.6] text-black">
               {meta}
             </p>
           )}
@@ -65,7 +72,7 @@ export default function DocumentPage({
         </article>
       </main>
 
-      <SiteFooter />
+      <SiteFooter surface="bg-[#fefefe]" />
     </>
   );
 }
