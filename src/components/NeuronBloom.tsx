@@ -32,8 +32,8 @@ import usePrefersReducedMotion from "@/lib/usePrefersReducedMotion";
 // happen once and nothing is served by driving them per frame.
 //
 // It is also written to be cheap, because it opens the page and anything it
-// costs is paid while the browser is still laying the page out, loading its
-// fonts and decoding the cover: the loop writes a property only when the
+// costs is paid while the browser is still laying the page out and loading
+// its fonts: the loop writes a property only when the
 // value it would write has actually changed, holds no mask over anything it
 // animates, and does not begin at all until the fonts have landed and the
 // first frames are the browser's own again.
@@ -199,6 +199,7 @@ const SLIDE = "cubic-bezier(0.22, 1, 0.36, 1)";
 export default function NeuronBloom({
   className = "",
   caption = true,
+  captionSize = 26,
   tone = "light",
 }: {
   className?: string;
@@ -212,6 +213,11 @@ export default function NeuronBloom({
   // date beside the mark it would be said twice. Dropping it also drops the
   // lift, which only existed to make room for it.
   caption?: boolean;
+  // Set in px, and worth passing wherever the mark is not at its usual size:
+  // the line is the mark's companion, not a fixed piece of furniture, and at
+  // 26px beside a small mark it stops reading as a caption and starts
+  // reading as a headline the mark is sitting on.
+  captionSize?: number;
 }) {
   const reduced = usePrefersReducedMotion();
   const [lifted, setLifted] = useState(false);
@@ -331,9 +337,9 @@ export default function NeuronBloom({
     // Two gates, and the loop runs only with both open: the mark has to be
     // on screen, and the page has to be past its own opening. This piece is
     // the first thing on the site, so it would otherwise start drawing into
-    // the middle of the browser's busiest moment — fonts swapping, the cover
-    // decoding — and lose frames out of the arrival, which is the one part
-    // of it that cannot afford them.
+    // the middle of the browser's busiest moment — fonts swapping, the page
+    // laying itself out — and lose frames out of the arrival, which is the
+    // one part of it that cannot afford them.
     let onScreen = false;
     let settled = false;
     let dropped = false;
@@ -401,8 +407,14 @@ export default function NeuronBloom({
       <div
         className="w-full"
         style={{
+          // Half the caption's own height, so the pair ends up optically
+          // centred where the mark alone had been — derived from the size
+          // rather than fixed, or a smaller line would leave the mark
+          // lifting further than there is now anything to make room for.
           transform:
-            revealed && caption ? "translateY(-22px)" : "translateY(0)",
+            revealed && caption
+              ? `translateY(-${Math.round(captionSize * 0.65)}px)`
+              : "translateY(0)",
           transition: reduced ? undefined : `transform 1700ms ${SLIDE}`,
         }}
       >
@@ -491,31 +503,30 @@ export default function NeuronBloom({
           there is nothing to slide up out of. */}
       {caption && (
         <span
-          className="font-naval pointer-events-none absolute top-full mt-1 flex items-baseline whitespace-nowrap uppercase leading-none text-ink"
+          // The season follows the tone for the same reason the mark does:
+          // on the dark band it is set in paper, not ink, or it goes
+          // invisible against the field it is standing on.
+          className={`font-venetian pointer-events-none absolute top-full mt-2 whitespace-nowrap leading-none ${
+            tone === "dark" ? "text-white" : "text-ink"
+          }`}
           style={{
-            fontSize: "30px",
-            fontWeight: 900,
-            letterSpacing: "0.07em",
-            marginRight: "-0.07em",
-            opacity: revealed ? 1 : 0,
+            // The season is simply set, in the reading face the documents
+            // use: no caps, no tracking, no second cut for the figures — the
+            // mark is the only drawn thing on the cover and the line under it
+            // says the date and nothing else.
+            fontSize: `${captionSize}px`,
+            // The reveal is this component's own; the variable is whoever is
+            // carrying the mark. On the cover the chrome winds it down to 0 as
+            // the mark is drawn up into the nav bar, where a season line
+            // hanging underneath would be nonsense. Unset, it is simply 1.
+            opacity: revealed ? "var(--nb-caption-fade, 1)" : 0,
             transform: revealed ? "translateY(0)" : "translateY(12px)",
             transition: reduced
               ? undefined
               : `opacity 2400ms ease-out, transform 2400ms ${SLIDE}`,
           }}
         >
-          Fall Winter&nbsp;
-          {/* Naval only ships oldstyle figures, which sit at x-height and read
-            as a different size next to the caps, and the Vera Humana cut is
-            drawn oblique — there is no upright in the file, so font-style
-            cannot stand it back up. The years go in the Saint Laurent cut,
-            which is upright and lining. */}
-          <span
-            className="font-wordmark"
-            style={{ fontStyle: "normal", fontSize: "0.86em" }}
-          >
-            2026-2027
-          </span>
+          Winter 2026
         </span>
       )}
     </div>

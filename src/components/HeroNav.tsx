@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import CsaiLockup from "@/components/CsaiLockup";
 import { heroNavLeft, heroNavRight } from "@/lib/content";
 
@@ -39,7 +40,17 @@ const LINK_LIGHT = `${LINK} doc-ink text-black`;
 // treatment — a faint grey pane washes across the whole bar. The ink stays
 // dark: at this tint there is nowhere near enough contrast to carry white
 // type, so inverting the links would make them unreadable.
-export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) {
+export default function HeroNav({
+  tone = "dark",
+  centre,
+}: {
+  tone?: "dark" | "light";
+  // What stands in the middle cell. The lockup by default; the stills run
+  // passes the house mark instead, because there the mark travels up out of
+  // the cover into this slot and saying the name twice beside it would be
+  // one house mark too many.
+  centre?: ReactNode;
+}) {
   const light = tone === "light";
   const link = light ? LINK_LIGHT : LINK;
   return (
@@ -66,13 +77,15 @@ export default function HeroNav({ tone = "dark" }: { tone?: "dark" | "light" }) 
           ))}
         </ul>
 
-        <Link
-          href="/"
-          className="flex items-center justify-center"
-          aria-label="CSAI Research, California"
-        >
-          <CsaiLockup marks={3} className="text-[20px]" />
-        </Link>
+        {centre ?? (
+          <Link
+            href="/"
+            className="flex items-center justify-center"
+            aria-label="CSAI Research, California"
+          >
+            <CsaiLockup marks={3} className="text-[20px]" />
+          </Link>
+        )}
 
         <ul className="flex flex-wrap items-center justify-end gap-x-7 gap-y-2">
           {heroNavRight.map((item) => (
