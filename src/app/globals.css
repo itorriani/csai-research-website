@@ -12,6 +12,15 @@
   --color-violet: #6d2b8f;
   --color-topbar: #4a2fb8;
   --color-rule: #d8d8d8;
+  /* The ground the homepage poster is printed on. It lives here rather than
+     in PosterCover.css because the house mark stands on it in the nav and
+     has to punch its open discs out in the same colour. */
+  --color-poster-blue: #3c68ad;
+  /* The violet end of the poster's ground. Barely a different colour — the
+     same value and nearly the same saturation, turned about twenty degrees
+     toward purple, so the sheet reads as unevenly inked rather than as a
+     gradient someone chose. */
+  --color-poster-violet: #4753a6;
 
   --font-sans: var(--font-open-sans), "Helvetica Neue", Arial, sans-serif;
   --font-wordmark: var(--font-wordmark-face), "Helvetica Neue", Arial, sans-serif;

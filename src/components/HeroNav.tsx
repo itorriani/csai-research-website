@@ -26,8 +26,15 @@ function SearchIcon() {
 // that up, so the same bar came out in Venetian there and in the body sans
 // on the homepage. The lockup has always named its own faces, so it was
 // only ever the links that moved.
+// `block` is doing alignment work, not layout work. Left inline, each link is
+// a 12px inline box baseline-aligned inside its li's line box — and that line
+// box is struck at the nav's own inherited 16px, so the caps sit about a pixel
+// and a half below the middle of the row. Everything else in the bar is
+// centred on the row, the house mark included, so the mark read high against
+// the links. As a block the link's own box is what gets centred and the
+// mismatch goes.
 const LINK =
-  "font-sans text-[12px] uppercase tracking-[0.12em] transition-opacity hover:opacity-60";
+  "block font-sans text-[12px] font-semibold uppercase tracking-[0.12em] transition-opacity hover:opacity-60";
 
 // On a white band the links carry full black and the document's own stroke:
 // at 12px tracked caps there is little enough ink that the stroke is what

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrainMark from "@/components/BrainMark";
+import CoverSheet from "@/components/CoverSheet";
 import type { Metadata } from "next";
 import DocumentPage from "@/components/DocumentPage";
 import { projects, previousProjects, type Project } from "@/lib/content";
@@ -9,29 +10,6 @@ export const metadata: Metadata = {
   description:
     "Every CSAI Research paper, shown as its cover sheet: MIND THE NOISE, CANARY, SOCIAL SIMULATION and ADUA.",
 };
-
-// The cover sheet from template.pdf, rebuilt rather than rasterised so it
-// stays crisp at any tile size. Everything inside is measured in `cqw`
-// against the sheet itself, so the composition scales with the grid instead
-// of needing a breakpoint per column count. On a white page the sheet needs
-// a border, or it has no edge; it is ruled in the document's own full black,
-// the same edge the member cards and the rules on the sheets carry, rather
-// than in a grey that reads as a UI container.
-function CoverSheet({ term }: { term: string }) {
-  return (
-    <div className="@container relative aspect-[8.5/11] w-full overflow-hidden border border-black bg-white">
-      <div className="absolute left-[13%] top-[10%]">
-        <BrainMark className="h-[7cqw] w-auto" />
-        <p className="mt-[3.2cqw] text-[5.2cqw] leading-none tracking-[-0.01em] text-black">
-          CSAI Research
-        </p>
-        <p className="mt-[2.4cqw] text-[3.5cqw] leading-none text-black/70">
-          {term}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 // The live marker: the mark itself, pulsing. Decorative — each title it sits
 // beside carries an sr-only label.

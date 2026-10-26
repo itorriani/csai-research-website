@@ -200,7 +200,10 @@ export default function NeuronBloom({
   className = "",
   caption = true,
   captionSize = 26,
+  captionText = "Winter 2026",
   tone = "light",
+  field,
+  weight = 1.7,
 }: {
   className?: string;
   // Which band the mark is standing on, named the way HeroNav names it:
@@ -209,6 +212,16 @@ export default function NeuronBloom({
   // holes punched in the strokes, so the field has to be whatever is
   // actually behind the mark or they read as white dots on black.
   tone?: "light" | "dark";
+  // What is actually behind the mark, where that is not simply the black bar
+  // or the white page `tone` assumes. The open discs are filled with it, so
+  // on any other ground — the homepage poster's blue, say — they come out as
+  // dark coins unless the caller says so.
+  field?: string;
+  // The weight of every stroke in the mark, in the units of its own viewBox
+  // — which is 117 wide, so at the sizes this is drawn in a nav bar a stroke
+  // of 1.7 lands at about half a pixel. Worth raising wherever the mark is
+  // small and has to hold its own against type beside it.
+  weight?: number;
   // The season line is part of the piece, but where the page sets its own
   // date beside the mark it would be said twice. Dropping it also drops the
   // lift, which only existed to make room for it.
@@ -218,6 +231,10 @@ export default function NeuronBloom({
   // 26px beside a small mark it stops reading as a caption and starts
   // reading as a headline the mark is sitting on.
   captionSize?: number;
+  // What the line actually says. Kept separate from whether it is shown at
+  // all, because a caller that wants "Winter 2026–2027" rather than the
+  // house default should not have to repeat the whole component to get it.
+  captionText?: string;
 }) {
   const reduced = usePrefersReducedMotion();
   const [lifted, setLifted] = useState(false);
@@ -427,7 +444,8 @@ export default function NeuronBloom({
           style={
             {
               "--nb-ink": tone === "dark" ? "#ffffff" : "#1a1a2e",
-              "--nb-field": tone === "dark" ? "#050509" : "#ffffff",
+              "--nb-field": field ?? (tone === "dark" ? "#050509" : "#ffffff"),
+              "--nb-weight": weight,
               overflow: "visible",
             } as React.CSSProperties
           }
@@ -442,7 +460,7 @@ export default function NeuronBloom({
             <g
               fill="none"
               stroke="var(--nb-ink)"
-              strokeWidth="1.7"
+              strokeWidth="var(--nb-weight)"
               strokeLinecap="round"
             >
               {WIRES.map((w, i) => (
@@ -477,7 +495,7 @@ export default function NeuronBloom({
                   r={n.r}
                   fill="var(--nb-field)"
                   stroke="var(--nb-ink)"
-                  strokeWidth="1.7"
+                  strokeWidth="var(--nb-weight)"
                 />
                 {/* The ink that turns a hollow disc solid. Fading this rather
                   than swapping the fill attribute is what makes a dot come on
@@ -526,7 +544,7 @@ export default function NeuronBloom({
               : `opacity 2400ms ease-out, transform 2400ms ${SLIDE}`,
           }}
         >
-          Winter 2026
+          {captionText}
         </span>
       )}
     </div>

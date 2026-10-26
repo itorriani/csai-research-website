@@ -1,0 +1,136 @@
+/* The homepage cover, set as a screen-printed poster.
+ *
+ * Every measurement here is taken off the reference rather than invented:
+ * the sheet is 1200 x 1785, its grid starts 7.9% in from the left and 12%
+ * down from the top, the tiles are square with a gutter of about a tenth of
+ * a tile, and the caption sits in the bottom margin below the grid. Holding
+ * those proportions is what makes it read as that poster rather than as a
+ * grid of pictures on blue.
+ *
+ * The sheet is sized off the viewport rather than off its container, because
+ * it has to stay a poster: the largest box of the sheet's own proportion that
+ * fits the screen with a margin of blue around it. On a phone that is nearly
+ * the whole screen; on a wide monitor it is a portrait sheet standing in a
+ * blue field, which is what the reference is.
+ */
+
+.poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  /* Blue at the head of the sheet and violet at the foot, and the top third
+     is held at the blue exactly. Two things stand in that band and both are
+     filled with the flat colour — the mark's open discs, up in the bar, and
+     the W punched out of its tile — so the ground has to still be that
+     colour where they sit, or they read as patches. */
+  background: linear-gradient(
+    168deg,
+    var(--poster-blue) 0%,
+    var(--poster-blue) 30%,
+    var(--poster-violet) 100%
+  );
+
+  --poster-blue: var(--color-poster-blue);
+  --poster-violet: var(--color-poster-violet);
+  /* 1200 / 1785, and its reciprocal, which is what caps the sheet by width. */
+  --sheet-h: min(88vh, 137vw);
+}
+
+/* The weave the ground is printed on. Overlay rather than multiply: canvas
+   catches light as well as holding ink, and a texture that only ever darkens
+   reads as dirt on the screen instead of as a surface. */
+.poster::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/projects/poster/ground.png");
+  background-size: 190px 190px;
+  mix-blend-mode: overlay;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* The unevenness of a thing that was photographed rather than exported. */
+.poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 70% at 44% 38%,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(0, 0, 0, 0.14) 100%
+  );
+  pointer-events: none;
+}
+
+.poster-sheet {
+  position: relative;
+  height: var(--sheet-h);
+  aspect-ratio: 1200 / 1785;
+}
+
+.poster-grid {
+  position: absolute;
+  left: 7.9%;
+  right: 7.7%;
+  top: 12%;
+  bottom: 12.6%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  /* The reference's gutters, expressed against the grid's own measure: 2.8%
+     of the sheet across, 1.6% of it down. */
+  gap: 2.12% 3.32%;
+}
+
+.poster-tile {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The cross-fade a cell makes when it changes feed. Both layers carry the
+   same duration, so halfway through neither is fully opaque and the blue
+   ground reads faintly through both — the change dips through the poster
+   rather than sliding one photograph over another. */
+.poster-shot {
+  object-fit: cover;
+  transition: opacity 1100ms ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-shot {
+    transition: none;
+  }
+}
+
+/* The three characters of the season. The first is punched out of its tile in
+   the ground colour; the other two stand on the blue with no tile behind them
+   at all, exactly as the reference sets its own three. */
+.poster-glyph {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-inter);
+  font-weight: 900;
+  font-size: calc(var(--sheet-h) * 0.15);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #f2f1ec;
+  /* Roughs the outline the way a screen print roughs it — the displacement
+     only moves the edge, so the letterform stays as sharp as it started. */
+  filter: url(#poster-rough);
+}
+
+.poster-glyph--punched {
+  position: absolute;
+  inset: 0;
+  color: var(--poster-blue);
+  /* Smaller than the two that stand on the blue, because this one has an
+     edge to respect. The reference's first character sits well inside its
+     tile; held at the same cap height as the digits, a W — far the widest
+     letter in the alphabet — would run out to both edges and the tile would
+     stop reading as a tile. */
+  font-size: calc(var(--sheet-h) * 0.12);
+}

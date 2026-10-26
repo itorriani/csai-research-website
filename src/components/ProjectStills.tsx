@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, type ReactNode } from "react";
-import InkBloom from "@/components/InkBloom";
+import PosterCover from "@/components/PosterCover";
 import StillsChrome from "@/components/StillsChrome";
 import type { Project } from "@/lib/content";
 
@@ -55,11 +55,9 @@ const REF_SIZE = 200;
 // first without touching.
 const LEADING = 0.82;
 
-// The measurement every fitted line shares. Set the line at the reference
-// size, read the width its glyphs actually occupy there, and return the size
-// that would make them span the measure exactly. It is a plain function
-// rather than a hook because the two titles differ in what they do with the
-// answer — one line, or one line and a companion held at the same size.
+// Measures the fit: set the line at the reference size, read the width its
+// glyphs actually occupy there, and return the size that would make them
+// span the measure exactly.
 function sizeToFit(lead: HTMLElement, available: number) {
   lead.style.fontSize = `${REF_SIZE}px`;
   const natural = lead.getBoundingClientRect().width;
@@ -233,7 +231,7 @@ function Still({
 // appears to stand on it belongs to the chrome above the run, which is what
 // lets it travel off this still and into the nav without ever changing
 // hands; the season below is the still's own.
-function CoverStill({ image }: { image: string }) {
+function CoverStill() {
   return (
     <article
       className="bg-page sticky top-0 h-screen"
@@ -242,50 +240,15 @@ function CoverStill({ image }: { image: string }) {
       {/* Same plate the project stills are mounted on, so the run opens on
           the frame it goes on keeping. */}
       <div className="relative h-full w-full overflow-hidden bg-[#050509]">
-        <div className="absolute inset-0">
-          <Image
-            src={image}
-            alt=""
-            fill
-            sizes="100vw"
-            // The cover opens the page, so this is the largest contentful
-            // paint and the one image on the run worth preloading.
-            priority
-            quality={90}
-            className="object-cover"
-          />
-        </div>
+        {/* The cover is a poster rather than a photograph, and unlike every
+            other still in the run it carries no scrims and no washes.
 
-        {/* The washes sit on the painting and under the scrims — they are part
-          of the picture, not an overlay on the finished cover, and putting
-          them beneath means the scrims go on reading them and the mark
-          together rather than fighting whichever bloom happens to be
-          swelling behind it. */}
-        <InkBloom />
-
-        {/* Two scrims, and the round one is doing more than contrast. The mark
-          punches its open discs out in the field colour rather than in
-          transparency, so over a photograph those discs are flat dark coins
-          wherever the picture behind them is not dark already. Sinking the
-          ground the mark stands on toward the same ink is what lets them read
-          as holes instead.
-
-          How tight it can be drawn depends on the picture under it. Over a
-          detailed photograph a small, strong pool disappears into the detail;
-          over something smooth and even — fog, cloud, a flat wall — the same
-          pool reads as a dark oval painted on the sky, and it has to be
-          spread wide and shallow instead to pass for light. This is set for a
-          photograph with detail in it, and is worth re-checking whenever the
-          cover changes to something flatter. */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(5,5,9,0.62)_0%,rgba(5,5,9,0.26)_24%,rgba(5,5,9,0.26)_58%,rgba(5,5,9,0.72)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_34%_26%_at_50%_22%,rgba(5,5,9,0.86)_0%,rgba(5,5,9,0.62)_38%,rgba(5,5,9,0.26)_72%,rgba(5,5,9,0)_100%)]" />
-
-        {/* The season is set under the mark rather than down here. A project
-            still carries its name in the corner because the name is the
-            thing; the cover carries a date, and a date set at the height of a
-            project's name would be the loudest word on a page it is only
-            dating. It belongs to the mark it follows, which is where the
-            chrome puts it. */}
+            Both used to be here and both were for a picture: a wash to give
+            the dark painting some weather, and two scrims to sink a ground
+            under the white mark. A poster is already a designed flat field at
+            a controlled value — white reads on it unaided — and anything laid
+            over the blue only makes the blue look dirty. */}
+        <PosterCover />
       </div>
     </article>
   );
@@ -301,8 +264,8 @@ export default function ProjectStills({
   projects: Project[];
   /** Keyed by project id, so the run cannot drift if the order changes. */
   images: Record<string, string>;
-  /** The opening still, stacked under the run. */
-  cover?: { image: string };
+  /** Whether the run opens on the cover wall, stacked under it. */
+  cover?: boolean;
 }) {
   // The chrome needs to know where the run ends so the bar can go when the
   // run does, and the run is this section.
@@ -312,7 +275,7 @@ export default function ProjectStills({
     <section id={id} ref={runRef} className="relative">
       {cover && (
         <>
-          <CoverStill image={cover.image} />
+          <CoverStill />
           {/* Outside every still, so no card can cover it. */}
           <StillsChrome runRef={runRef} />
         </>
