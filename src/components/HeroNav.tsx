@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import CsaiLockup from "@/components/CsaiLockup";
+import BrainMark from "@/components/BrainMark";
 import { heroNavLeft, heroNavRight } from "@/lib/content";
 
 function SearchIcon() {
@@ -84,13 +84,23 @@ export default function HeroNav({
           ))}
         </ul>
 
+        {/* The house mark alone, and the same mark at the same size on every
+            page. It used to be the full lockup here and the bare mark only
+            over the stills run, which meant the one fixed point in the
+            chrome moved and changed shape as you navigated. The wordmark is
+            not lost — it is the first thing on the page it belongs to.
+
+            Sized a little narrower than the run's own mark because that one
+            is drawn in a viewBox with more air around the graph; at these
+            widths the two marks come out the same size on the screen, which
+            is the point. */}
         {centre ?? (
           <Link
             href="/"
             className="flex items-center justify-center"
             aria-label="CSAI Research, California"
           >
-            <CsaiLockup marks={3} className="text-[20px]" />
+            <BrainMark className="h-auto w-[34px]" />
           </Link>
         )}
 

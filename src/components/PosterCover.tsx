@@ -76,7 +76,15 @@ function Tile({
   }, []);
 
   return (
-    <div className="poster-tile" style={{ gridArea: `${row} / ${col}` }}>
+    <div
+      className="poster-tile"
+      style={
+        {
+          gridArea: `${row} / ${col}`,
+          "--tile-index": index,
+        } as React.CSSProperties
+      }
+    >
       {[index, index + SPAN].map((n, i) => (
         <Image
           key={n}

@@ -30,6 +30,11 @@
 
   /* Naval is reserved for the CSAI Research lockup — nothing else. */
   --font-naval: var(--font-naval-face), "Times New Roman", Georgia, serif;
+
+  /* The stock the About sheet is printed on, under trial there before it is
+     offered to any other document. The ground it lies on is the homepage's
+     own printed blue, so it needs no colour of its own here. */
+  --color-vanilla: #f0e7d5;
 }
 
 body {
@@ -123,6 +128,107 @@ body {
    bold would thicken the stems unevenly and close up the serifs. */
 .doc-heading {
   -webkit-text-stroke: 0.7px currentColor;
+}
+
+/* The ground the homepage poster is printed on, lifted out of PosterCover.css
+   so any page can be laid on the same surface. Three layers, and all three
+   are what make it read as something printed rather than as a flat fill:
+   a gradient that is barely two colours, the weave of the stock over it, and
+   the uneven light of a sheet that was photographed rather than exported.
+
+   The colours are the element's own custom properties, so a page sets
+   --ground-from and --ground-to and gets its own printing of the same stock;
+   left unset it comes out the poster's blue.
+
+   Both washes are laid under the content rather than over it. The ::after
+   light would otherwise fall across the sheet and the nav — it is the last
+   child, so it paints above everything in flow — and a vignette creeping
+   over a page of text reads as a dirty screen, not as a printed ground. */
+/* The defaults are fallbacks inside the var() rather than declarations of
+   their own, and deliberately: this file is unlayered, so a `--ground-from`
+   set here would beat the utility a page sets it with whatever the
+   specificity, and every ground would come out blue. */
+.printed-ground {
+  position: relative;
+  background: linear-gradient(
+    168deg,
+    var(--ground-from, var(--color-poster-blue)) 0%,
+    var(--ground-from, var(--color-poster-blue)) 30%,
+    var(--ground-to, var(--color-poster-violet)) 100%
+  );
+}
+
+.printed-ground::before,
+.printed-ground::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The weave. Overlay rather than multiply: canvas catches light as well as
+   holding ink, and a texture that only ever darkens reads as dirt. */
+.printed-ground::before {
+  background-image: url("/projects/poster/ground.png");
+  background-size: 190px 190px;
+  mix-blend-mode: overlay;
+  opacity: 0.3;
+}
+
+.printed-ground::after {
+  background: radial-gradient(
+    ellipse 80% 70% at 44% 38%,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(0, 0, 0, 0.14) 100%
+  );
+}
+
+.printed-ground > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Feathers a plate into the sheet it is lying on. The drawing's own ground
+   is 242, not white, so multiplying it onto the paper still leaves a panel a
+   shade darker than the stock — and a panel has four hard edges. Two
+   gradients, intersected, fade all four of them out so the picture arrives
+   as a wash on the page rather than as a photograph pasted to it. The strokes
+   that run off the bottom trail away with it, which is what a brush does
+   anyway. */
+.plate-feather {
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 13%,
+      black 87%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 13%,
+      black 87%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+  mask-composite: intersect;
 }
 
 /* Laid paper. A tile of fractal noise at an opacity low enough that it

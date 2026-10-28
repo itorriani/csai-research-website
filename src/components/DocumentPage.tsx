@@ -12,6 +12,10 @@ export default function DocumentPage({
   byline,
   meta,
   children,
+  surface = "bg-[#fefefe]",
+  sheet = "bg-white",
+  footerSurface,
+  tone = "light",
 }: {
   /** Omit on a sheet that carries its own masthead, and the title block —
       house mark included — is not rendered at all. */
@@ -21,6 +25,16 @@ export default function DocumentPage({
   /** The credit line under the title. */
   meta?: React.ReactNode;
   children: React.ReactNode;
+  /** The ground the sheet lies on. Classes, so a page can hand over a
+      printed surface rather than a flat colour. */
+  surface?: string;
+  /** The sheet itself. */
+  sheet?: string;
+  /** Defaults to the ground. Set it where the ground is too dark to carry
+      the footer, which prints its own type in black. */
+  footerSurface?: string;
+  /** Follows the ground, not the sheet — the bar sits on the former. */
+  tone?: "dark" | "light";
 }) {
   return (
     <>
@@ -29,8 +43,10 @@ export default function DocumentPage({
           the sheet's own `mt-6` at the head — a document wants more room
           trailing it than leading it, and the shadow needs somewhere to
           fall. */}
-      <main className="font-venetian subpixel-antialiased bg-[#fefefe] pb-16 text-black sm:pb-20">
-        <HeroNav tone="light" />
+      <main
+        className={`font-venetian subpixel-antialiased ${surface} pb-16 text-black sm:pb-20`}
+      >
+        <HeroNav tone={tone} />
 
         {/* The sheet. Pure white on the off-white page, so the paper is
             the lighter of the two surfaces. The two tones sit a single
@@ -39,7 +55,9 @@ export default function DocumentPage({
             ever reading as a raised UI card. The horizontal padding is the
             paper margin, not a layout inset: the white carries past the
             measure on both sides before the page tone resumes. */}
-        <article className="mx-auto mt-6 w-full max-w-[860px] bg-white px-10 pb-32 pt-8 shadow-[0_2px_16px_-10px_rgba(0,0,0,0.18)] sm:px-16 sm:pb-40 sm:pt-10">
+        <article
+          className={`mx-auto mt-6 w-full max-w-[860px] ${sheet} px-10 pb-32 pt-8 shadow-[0_2px_16px_-10px_rgba(0,0,0,0.18)] sm:px-16 sm:pb-40 sm:pt-10`}
+        >
           {/* The rule that opens the sheet. Full black and hairline — it
               reads as a ruled page, not as a UI divider. */}
           <div className="border-t border-black" />
@@ -72,7 +90,7 @@ export default function DocumentPage({
         </article>
       </main>
 
-      <SiteFooter surface="bg-[#fefefe]" />
+      <SiteFooter surface={footerSurface ?? surface} />
     </>
   );
 }

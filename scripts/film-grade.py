@@ -60,7 +60,7 @@ DEFAULT = [
 # the grain is scaled by the ratio.
 DISPLAY_W = 1600
 GRAIN_PX = 1.9  # how big a grain cluster should land, in display pixels
-GRAIN = 0.085  # and how hard it bites in the midtones
+GRAIN = 0.042  # and how hard it bites in the midtones
 
 # Relative graininess of the three dye layers. Blue is the fastest and the
 # worst, which is where film's colour speckle comes from.

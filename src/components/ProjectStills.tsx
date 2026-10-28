@@ -55,6 +55,16 @@ const REF_SIZE = 200;
 // first without touching.
 const LEADING = 0.82;
 
+// The ceiling the fit is held under. Spanning the full measure is right for
+// a name with enough characters to carry it — CANARY, at six letters, is
+// already the tallest title in the run and lands around 42% of the viewport
+// height. A shorter name has no more characters to spread the same width
+// across, so fitting it unbounded blows every letter past that scale (ADUA,
+// at four, hit ~60% — taller than the still has room for). Capping at the
+// same ratio CANARY already reaches keeps every title on one shared scale
+// instead of growing in inverse proportion to how short its name is.
+const MAX_TITLE_RATIO = 0.42;
+
 // Measures the fit: set the line at the reference size, read the width its
 // glyphs actually occupy there, and return the size that would make them
 // span the measure exactly.
@@ -118,7 +128,10 @@ function Still({
     return watchFit(span, () => {
       const available = span.parentElement?.clientWidth;
       if (!available) return;
-      const size = sizeToFit(span, available);
+      const size = Math.min(
+        sizeToFit(span, available),
+        window.innerHeight * MAX_TITLE_RATIO,
+      );
       if (size) setLine(span, size);
     });
   }, [project.name]);
@@ -179,7 +192,7 @@ function Still({
             {project.href && (
               <Link
                 href={project.href}
-                className="font-sans shrink-0 border border-white/60 px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:bg-white hover:text-[#050509]"
+                className="font-sans shrink-0 border-2 border-white/60 px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:bg-white hover:text-[#050509]"
               >
                 Read the work <span aria-hidden="true">&rarr;</span>
               </Link>
@@ -187,6 +200,17 @@ function Still({
           </div>
 
           <div>
+            {/* The term, set plain above the fitted name. It is what tells
+                ADUA apart from the current work sharing its run — everything
+                else here reads 2026–2027, ADUA reads 2025–2026, and the
+                number alone is enough to say "last season's" without a
+                badge arguing the point. */}
+            {project.term && (
+              <p className="font-sans mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white">
+                {project.term}
+              </p>
+            )}
+
             {/* The fitted name. The negative margin pulls the first glyph's
               left sidebearing out past the padding so the stem of the cap
               lands on the same vertical as the rules and type above it —

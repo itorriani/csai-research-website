@@ -86,9 +86,25 @@
   gap: 2.12% 3.32%;
 }
 
+/* The sheet prints itself: the blue ground is there from the first frame and
+   the photographs are laid into it one cell at a time, in reading order.
+   `backwards` is what holds a tile out of sight through its own delay —
+   without it every cell would be up on frame one and only the last would
+   appear to fade. */
 .poster-tile {
   position: relative;
   overflow: hidden;
+  animation: poster-tile-in 760ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--tile-index) * 150ms);
+}
+
+@keyframes poster-tile-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* The cross-fade a cell makes when it changes feed. Both layers carry the
@@ -103,6 +119,10 @@
 @media (prefers-reduced-motion: reduce) {
   .poster-shot {
     transition: none;
+  }
+
+  .poster-tile {
+    animation: none;
   }
 }
 

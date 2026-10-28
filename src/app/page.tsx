@@ -1,5 +1,4 @@
 import SiteFooter from "@/components/SiteFooter";
-import ResearchPoster from "@/components/ResearchPoster";
 import ProjectStills from "@/components/ProjectStills";
 import { projects, previousProjects } from "@/lib/content";
 
@@ -23,25 +22,20 @@ export default function Home() {
           the stacking outright. */}
       <ProjectStills
         id="projects"
-        projects={projects}
+        // ADUA closes the run rather than sitting in its own paper section —
+        // same still treatment as the current work, just carrying last
+        // year's term instead of this year's.
+        projects={[...projects, ...previousProjects]}
         images={{
           eeg: "/projects/mind-the-noise-band.jpg",
           canary: "/projects/canary-siren-color.jpg",
           ss: "/projects/social-simulation-crowd.jpg",
+          adua: "/projects/adua-poster-road.jpg",
         }}
         // The cover is a wall of screens built from the club's own rooms —
         // see PhotoWall, and `scripts/photo-wall.py` for the tiles it is
         // laid with.
         cover
-      />
-
-      {/* Concluded work, on paper. It carries its own white ground rather
-          than the painted dark field the run above it is lit on, so the cut
-          out of the stills is also the cut out of the season. */}
-      <ResearchPoster
-        id="previous-projects"
-        heading={<>Spring 2025&ndash;2026 Research</>}
-        project={previousProjects[0]}
       />
 
       <SiteFooter />

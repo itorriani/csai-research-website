@@ -1,5 +1,5 @@
 import Image from "next/image";
-import FooterIsometric from "@/components/FooterIsometric";
+import FooterComposition from "@/components/FooterComposition";
 import { footerColumns } from "@/lib/content";
 
 // `surface` is the tone the footer band carries. It defaults to white, the
@@ -15,11 +15,12 @@ export default function SiteFooter({
   // sheets carry, and what parts the footer from the page above it.
   return (
     <footer className={`relative overflow-hidden border-t border-black ${surface}`}>
-      {/* Anchored to the bottom right corner and allowed to run under the
-          columns, which is where the reference's own lattice goes — it is the
-          ground the type sits on rather than a panel beside it. Clipped by
-          the footer, so on a narrow screen it simply loses its left side. */}
-      <FooterIsometric className="pointer-events-none absolute bottom-0 right-0 h-full w-[min(62%,640px)] select-none" />
+      {/* Held in the open corner to the right of the columns rather than run
+          underneath them. The squares are solid, so unlike the wireframe that
+          stood here before they cannot be laid behind type — the white gap
+          around them is doing as much work as the black, and it is the first
+          thing that goes if the drawing is allowed to drift into the text. */}
+      <FooterComposition className="pointer-events-none absolute bottom-10 right-5 w-[min(42%,200px)] select-none text-black md:bottom-12 md:w-[min(34%,320px)]" />
 
       <div className="relative mx-auto w-full max-w-[1200px] px-5 pb-10 pt-14">
         <div className="grid gap-10 md:grid-cols-3">
