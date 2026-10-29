@@ -1,9 +1,15 @@
 import Link from "next/link";
 import BrainMark from "@/components/BrainMark";
 import CoverSheet from "@/components/CoverSheet";
-import type { Metadata } from "next";
 import DocumentPage from "@/components/DocumentPage";
-import { projects, previousProjects, type Project } from "@/lib/content";
+import FeatureMasthead from "@/components/FeatureMasthead";
+import type { Metadata } from "next";
+import {
+  collectionsIntro,
+  projects,
+  previousProjects,
+  type Project,
+} from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Collections | CSAI Research",
@@ -74,11 +80,33 @@ function Shelf({
   );
 }
 
+// The index, opened the way the About sheet is: the name stacked in the
+// display face, a standfirst under it, a credit line, and then a drop of
+// white before the work itself. Same masthead component, so the two cannot
+// drift apart.
 export default function CollectionsPage() {
+  const all = [...projects, ...previousProjects];
+
   return (
-    <DocumentPage title="Collections">
-      <Shelf term="2026–2027" papers={projects} inProgress />
-      <Shelf term="2025–2026" papers={previousProjects} inProgress={false} />
+    <DocumentPage>
+      <FeatureMasthead
+        words={["Collections"]}
+        standfirst={collectionsIntro}
+        credits={[
+          { role: "Terms", name: "2025\u20132027" },
+          // Two digits, so the count reads as a set number rather than as a
+          // quantity.
+          { role: "Papers", name: String(all.length).padStart(2, "0") },
+        ]}
+      />
+
+      {/* The same interval the About sheet leaves between its masthead and
+          its text — it is what makes the opening read as a feature rather
+          than as a heading with a list under it. */}
+      <div className="mt-24 sm:mt-32">
+        <Shelf term="2026–2027" papers={projects} inProgress />
+        <Shelf term="2025–2026" papers={previousProjects} inProgress={false} />
+      </div>
     </DocumentPage>
   );
 }

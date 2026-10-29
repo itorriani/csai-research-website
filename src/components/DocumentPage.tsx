@@ -12,10 +12,10 @@ export default function DocumentPage({
   byline,
   meta,
   children,
-  surface = "bg-[#fefefe]",
-  sheet = "bg-white",
-  footerSurface,
-  tone = "light",
+  surface = "printed-ground",
+  sheet = "bg-offwhite",
+  footerSurface = "bg-offwhite",
+  tone = "dark",
 }: {
   /** Omit on a sheet that carries its own masthead, and the title block —
       house mark included — is not rendered at all. */
@@ -26,14 +26,18 @@ export default function DocumentPage({
   meta?: React.ReactNode;
   children: React.ReactNode;
   /** The ground the sheet lies on. Classes, so a page can hand over a
-      printed surface rather than a flat colour. */
+      printed surface rather than a flat colour. Every document sheet on the
+      site now lies on the homepage's own printed indigo, so that is the
+      default rather than something each page opts into. */
   surface?: string;
   /** The sheet itself. */
   sheet?: string;
-  /** Defaults to the ground. Set it where the ground is too dark to carry
-      the footer, which prints its own type in black. */
+  /** The band under the sheet. It does not follow the ground: the footer
+      prints its own type in black and would be unreadable on the indigo, so
+      the paper carries on under it. */
   footerSurface?: string;
-  /** Follows the ground, not the sheet — the bar sits on the former. */
+  /** Follows the ground, not the sheet — the bar sits on the former, and the
+      indigo needs the white cut. */
   tone?: "dark" | "light";
 }) {
   return (
@@ -48,13 +52,13 @@ export default function DocumentPage({
       >
         <HeroNav tone={tone} />
 
-        {/* The sheet. Pure white on the off-white page, so the paper is
-            the lighter of the two surfaces. The two tones sit a single
-            step apart, far too close to carry the edge, so a shadow
-            does it — soft and tight enough that it lifts the sheet without
-            ever reading as a raised UI card. The horizontal padding is the
-            paper margin, not a layout inset: the white carries past the
-            measure on both sides before the page tone resumes. */}
+        {/* The sheet. Off-white paper lying on the printed indigo — the two
+            are far enough apart now that the edge carries itself, but the
+            shadow stays: it is what sets the paper down on the ground rather
+            than pasting it to it, and without it the sheet reads as a hole
+            cut in the indigo. The horizontal padding is the paper margin,
+            not a layout inset: the stock carries past the measure on both
+            sides before the ground resumes. */}
         <article
           className={`mx-auto mt-6 w-full max-w-[860px] ${sheet} px-10 pb-32 pt-8 shadow-[0_2px_16px_-10px_rgba(0,0,0,0.18)] sm:px-16 sm:pb-40 sm:pt-10`}
         >
@@ -90,7 +94,7 @@ export default function DocumentPage({
         </article>
       </main>
 
-      <SiteFooter surface={footerSurface ?? surface} />
+      <SiteFooter surface={footerSurface} />
     </>
   );
 }

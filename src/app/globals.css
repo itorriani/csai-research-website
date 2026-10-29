@@ -26,15 +26,22 @@
   --font-wordmark: var(--font-wordmark-face), "Helvetica Neue", Arial, sans-serif;
   --font-ysl: var(--font-ysl-face), "Helvetica Neue", Arial, sans-serif;
   --font-inter: var(--font-inter-face), "Helvetica Neue", Arial, sans-serif;
+  /* Carried for the About feature masthead only — nothing else on the site
+     is set in it. The fallbacks are the narrowest faces that ship on each
+     platform, so a swap keeps the shape of the stack. */
+  --font-display: var(--font-display-face), "Haettenschweiler", "Arial Narrow", "Helvetica Neue Condensed", sans-serif;
   --font-venetian: var(--font-venetian-face), "Times New Roman", Georgia, serif;
 
   /* Naval is reserved for the CSAI Research lockup — nothing else. */
   --font-naval: var(--font-naval-face), "Times New Roman", Georgia, serif;
 
-  /* The stock the About sheet is printed on, under trial there before it is
-     offered to any other document. The ground it lies on is the homepage's
-     own printed blue, so it needs no colour of its own here. */
-  --color-vanilla: #f0e7d5;
+  /* The stock every document sheet is printed on. Off-white, and neutral
+     about it: a warm sheet reads as cream against the indigo, which is a
+     different kind of paper from the one this is meant to be. It carries the
+     faintest cool cast instead — the same direction the ink plates' own
+     ground runs, so a plate multiplied onto the sheet lands on its own tone
+     rather than shifting it. */
+  --color-offwhite: #f3f4f5;
 }
 
 body {
@@ -231,6 +238,28 @@ body {
   mask-composite: intersect;
 }
 
+/* The same job as .plate-feather, but for a plate standing *behind* type
+   rather than beside it. The linear masks there fade four edges and still
+   leave four straight ones; at the opacity a backdrop runs at, the drawing's
+   own near-white ground multiplies down to a panel two or three values off
+   the sheet, and a faint rectangle is exactly what the eye finds. A radial
+   mask has no edge to find — the plate simply stops existing before it gets
+   anywhere near one. */
+.plate-vignette {
+  -webkit-mask-image: radial-gradient(
+    ellipse 60% 66% at 50% 44%,
+    #000 0%,
+    #000 40%,
+    transparent 82%
+  );
+  mask-image: radial-gradient(
+    ellipse 60% 66% at 50% 44%,
+    #000 0%,
+    #000 40%,
+    transparent 82%
+  );
+}
+
 /* Laid paper. A tile of fractal noise at an opacity low enough that it
    never reads as a texture in its own right — it only stops the card
    surface from being flat screen white, the way a printed stock is not.
@@ -279,5 +308,116 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .page-fade {
     animation: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------------- *
+   The feature opening — the About sheet set as a magazine feature rather
+   than as a document. Everything below is scoped to that arrangement: a
+   condensed display line stacked word by word, a bold standfirst under it,
+   a credit line, and then the text falling into two justified columns with
+   a drop cap, the way a printed feature opens.
+ * ---------------------------------------------------------------------- */
+
+/* The display line. Archivo is variable on width, so the condensation is a
+   real cut of the face at 62.5% rather than type squeezed horizontally —
+   which at this size would thin the horizontals against the stems and show
+   immediately. Leading under 1 is what stacks the words into a block: the
+   lines have to touch for three words to read as one mark. */
+.feature-display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 72;
+  text-transform: uppercase;
+  line-height: 0.84;
+  letter-spacing: 0.002em;
+  /* The house body stroke would smear a face this heavy. */
+  -webkit-text-stroke: 0;
+}
+
+/* The one closed-up pair in the display line. A real ligature would be a
+   glyph in the font, which this face does not carry, so the join is made by
+   removing the sidebearing between the two letters instead. It is set in em
+   so it tracks the line at every size — a pixel value would come apart on a
+   phone and overlap on a wide screen. */
+.feature-ligature {
+  letter-spacing: -0.088em;
+}
+
+/* The standfirst. Set in the house reading face, so the only thing on the
+   sheet not in Venetian is the display line itself. HK Venetian ships a
+   single Regular cut, so the weight the reference sets this in comes from a
+   heavier stroke than the body carries — a synthetic bold would thicken the
+   stems unevenly and close up the serifs. The stroke is heavier than
+   .doc-heading's because this is set well above body size and has to hold
+   its weight against the mark above it. */
+.feature-standfirst {
+  font-family: var(--font-venetian);
+  -webkit-text-stroke: 0.62px currentColor;
+}
+
+/* The credit line. Labels and names are the same face — the whole sheet is
+   Venetian below the display line — so the labels are marked by stroke
+   alone, which is how the rest of the site sets a run-in heading. */
+.feature-credit-label {
+  -webkit-text-stroke: 0.6px currentColor;
+}
+
+/* The two columns. Balanced rather than filled, so the measure ends level
+   across the foot of the sheet instead of running the left column long. */
+.feature-columns {
+  column-count: 1;
+  column-gap: 2.4rem;
+  orphans: 2;
+  widows: 2;
+}
+
+@media (min-width: 768px) {
+  .feature-columns {
+    column-count: 2;
+  }
+}
+
+/* Paragraphs run on. A printed feature marks a new paragraph with an indent,
+   not with a blank line — space between paragraphs in a narrow justified
+   column breaks the grey of the page into slabs. The first line of the
+   feature is flush, as it always is. */
+.feature-columns > p {
+  margin: 0;
+  text-indent: 1.15em;
+}
+
+.feature-columns > p:first-child {
+  text-indent: 0;
+}
+
+/* The drop cap. Three lines deep, set in the display face so it reads as
+   belonging to the masthead above rather than as an enlarged serif. The
+   right margin is tight on purpose — the cap should touch the text it
+   holds up. */
+.feature-dropcap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-variation-settings: "opsz" 72;
+  /* Three lines deep, and that is arithmetic rather than taste: the float's
+     height is font-size x line-height, so it has to come to three times the
+     body's 1.52 leading, margin included. 5.6 x 0.78 = 4.37em against the
+     4.56em the three lines occupy, and the top margin is zero rather than
+     small: anything that carries the float past those three lines indents a
+     fourth one against nothing, and the overshoot only has to be a pixel. */
+  font-size: 5.6em;
+  line-height: 0.78;
+  margin: 0 0.055em 0 0;
+  -webkit-text-stroke: 0;
+}
+
+/* On a phone the measure is one column and much wider in characters, so the
+   cap drops to two lines — three would hold open a notch deep enough to
+   strand short words beside it. */
+@media (max-width: 767px) {
+  .feature-dropcap::first-letter {
+    font-size: 3.73em;
   }
 }

@@ -114,6 +114,18 @@ export const aboutIntro =
 
 export const aboutLead = "Our organization is driven by three core values:";
 
+// The credit line under the standfirst. Labels and names are kept apart so
+// the sheet can set the first in the grotesque and the second in the reading
+// face, the way a printed feature credits its contributors.
+export const aboutCredits = [
+  { role: "Director", name: "Ivan Torriani" },
+  { role: "Associate Directors", name: "Trace Macias, Marek Seablom-Michel" },
+];
+
+// The standfirst on the Collections index.
+export const collectionsIntro =
+  "Every paper the division has published, shown as its cover sheet \u2014 the work in progress this term, and the work already concluded.";
+
 export const coreValues = [
   {
     term: "Impact",
@@ -273,14 +285,18 @@ export const mindTheNoisePivots = [
   },
 ];
 
-// Mind the Noise, the project document. Three movements: the gap, what the
-// project does about it, and where the method could go next.
-export const mindTheNoiseSections: {
+// A movement of a project document. Every sheet runs the same shape: a hook,
+// what came of it, and a closing section that carries a list.
+export type Section = {
   /** Kept as an authoring key only — the page renders no section headings. */
   label: string;
   body: string;
   points?: string[];
-}[] = [
+};
+
+// Mind the Noise, the project document. Three movements: the gap, what the
+// project does about it, and where the method could go next.
+export const mindTheNoiseSections: Section[] = [
   {
     label: "Hook",
     body: ".00001% of the human brain has been mapped in full detail, according to Harvard and Google scientists Viren Jain and Jeff Lichtman. For reference, the ocean is considered one of the most mysterious and unexplored domains in the world, and has 27% mapped. With this lack of information, we can’t understand some of the most fundamental human operations like consciousness, memory, attention, decision making, emotion, and learning.",
@@ -356,12 +372,7 @@ export const canaryTeam = [
   "Johan Jijo",
 ];
 
-export const canarySections: {
-  /** Kept as an authoring key only — the page renders no section headings. */
-  label: string;
-  body: string;
-  points?: string[];
-}[] = [
+export const canarySections: Section[] = [
   {
     label: "Hook",
     body: "Prompt injection involves an attacker who hides instructions in content an AI receives, which can make the agent do malicious activity; it’s rated as the #1 risk on OWASP for AI applications, and work presented at NeurIPS finds that even top-tier models \u2014 Claude, ChatGPT, and Gemini among them \u2014 are deceived by simple, low-effort human-written injections, which partially succeed in up to 86% of cases. With Gartner projecting a 700% rise in enterprise applications carrying task-specific AI agents, if prompt injection can’t be properly addressed, corporations can be exploited, critical infrastructure can be penetrated, and technological development will slow down.",
@@ -457,12 +468,7 @@ export const socialSimulationTeam = [
   "Saurish Suman",
 ];
 
-export const socialSimulationSections: {
-  /** Kept as an authoring key only — the page renders no section headings. */
-  label: string;
-  body: string;
-  points?: string[];
-}[] = [
+export const socialSimulationSections: Section[] = [
   {
     label: "Hook",
     body: "96% of companies surveyed across more than 260 organisations run a form of beta-testing, where customers are given early access to a product to test it before an official launch. Part of the strength of beta-testing comes from the diversity of the customers; in work by senior researchers Margaret Burnett and Anita Sarma, viewing the same product through different cognitive frames surfaced inclusivity issues in over half of the interactions evaluated, more than 90% of which were later confirmed against independent empirical data. As more and more companies try to leverage AI agents to simulate this beta-testing, they struggle to emulate unique personalities and therefore cannot evaluate products effectively.",
@@ -549,12 +555,7 @@ export const aduaTeam = [
   "Zach Goldwyn",
 ];
 
-export const aduaSections: {
-  /** Kept as an authoring key only — the page renders no section headings. */
-  label: string;
-  body: string;
-  points?: string[];
-}[] = [
+export const aduaSections: Section[] = [
   {
     label: "Hook",
     body: "On December 20th, 2025, San Francisco’s power outage shut off traffic and street lights, causing the city’s Waymo’s to stall more than 1,500 times in one night; the normal daily rate was reported by SF officials at 4, making this abnormal Saturday night 375 times worse. Autonomous vehicles struggle when they are put in unfamiliar and rare situations they haven’t been trained on, in this case, a city without traffic lights. The biggest gap between modern deprecated autonomy and full autonomy is the ability for a model, like a self-driving model, to be able to make logical decisions even in situations it hasn’t been trained on.",
